@@ -1,0 +1,32 @@
+export interface PilotMessage {
+  sender: 'copilot' | 'user';
+  text: string;
+  timestamp: string;
+}
+
+export interface QuoteInquiry {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  subject: string;
+  emailBody: string;
+  receivedAt: string;
+  partNumberExtracted: string;
+  partNumberCorrected: string;
+  serialNumberExtracted: string;
+  serialNumberCorrected: string;
+  status: 'unqualified' | 'clarification_draft' | 'awaiting_clarification' | 'qualified' | 'engineering_routed' | 'accepted_hub' | 'accepted_ai_agent' | 'completed';
+  aiConfidence: number; // 0-100
+  suggestedComplexity: 'Simple' | 'Complex';
+  finalComplexity: 'Simple' | 'Complex' | '';
+  notes: string;
+  quoteNumber: string;
+  price: number;
+  shippingCost: number;
+  leadTime: number; // in days
+  discount: number; // e.g. 5%
+  draftEmailText: string;
+  clarificationEmailText: string;
+  pilotMessages: PilotMessage[];
+  attachments?: { name: string; type: string; size: string; content?: string }[];
+}

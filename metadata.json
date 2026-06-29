@@ -1,0 +1,6 @@
+{
+  "name": "Sales Support Hub",
+  "description": "B2B enterprise dashboard for managing AI-assisted spare parts quotes with 100% human qualification.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
