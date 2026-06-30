@@ -29,4 +29,6 @@ export interface QuoteInquiry {
   clarificationEmailText: string;
   pilotMessages: PilotMessage[];
   attachments?: { name: string; type: string; size: string; content?: string }[];
+  customerSentAt?: string;
+  forwardedBy?: string;
 }

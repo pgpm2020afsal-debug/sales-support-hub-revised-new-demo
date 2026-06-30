@@ -23,7 +23,9 @@ Kind Regards,
 Dylan Bell
 Service Co-Ordinator
 Ph: 01483 917702 | www: www.pdasgoup.co.uk`,
-    receivedAt: '2026-06-23T08:14:00Z',
+    customerSentAt: '2026-06-23T08:20:00Z',
+    receivedAt: '2026-06-23T08:44:00Z',
+    forwardedBy: 'Sarah Jenkins (UK Sales)',
     partNumberExtracted: 'FP80C-CB1.3',
     partNumberCorrected: 'FP80C-CB1.3',
     serialNumberExtracted: '301009200',
@@ -72,7 +74,9 @@ Please can we have a quote for replacement hydraulic kit for the pump, as per th
 Kind Regards,
 Oliver Yates
 Midland Water Utilities`,
+    customerSentAt: '2026-06-22T07:10:00Z',
     receivedAt: '2026-06-23T09:45:00Z',
+    forwardedBy: 'Tom Richards (Midlands Rep)',
     partNumberExtracted: '', // MISSING (it is in the attached data plate!)
     partNumberCorrected: '',
     serialNumberExtracted: '', // MISSING
@@ -134,7 +138,9 @@ Shipping destination is Rio de Janeiro port support yard. Standard freight is ac
 Best regards,
 Roberto Silva
 Procurement Office | Petro-Brasil SA`,
+    customerSentAt: '2026-06-23T04:05:00Z',
     receivedAt: '2026-06-23T06:30:00Z',
+    forwardedBy: 'Ana Costa (LATAM Sales)',
     partNumberExtracted: 'GS-1049',
     partNumberCorrected: 'GS-1049',
     serialNumberExtracted: 'SN-481920',
@@ -189,7 +195,9 @@ Please confirm standard lead time and carriage costs to our Leeds Depot.
 Best regards,
 Liam Henderson
 Leeds Water Treatment Operations`,
+    customerSentAt: '2026-06-22T15:30:00Z',
     receivedAt: '2026-06-23T11:02:00Z',
+    forwardedBy: 'James Booth (North UK)',
     partNumberExtracted: 'FP100G-CB1.5',
     partNumberCorrected: 'FP100G-CB1.5',
     serialNumberExtracted: '301008544',
@@ -244,7 +252,9 @@ Let me know standard lead times.
 Thank you,
 David Miller
 Operations Engineer | Detroit Municipal Water`,
+    customerSentAt: '2026-06-23T04:50:00Z',
     receivedAt: '2026-06-23T05:12:00Z',
+    forwardedBy: 'Chris Wade (US East)',
     partNumberExtracted: '31055123 M',
     partNumberCorrected: '31055123 M',
     serialNumberExtracted: '301009201',
@@ -328,7 +338,9 @@ In case of any questions, kindly contact the following persons as named below:
 •	Technical queries : Rupesh Sagare (in CC)
 •	Commercial queries : Milind Salunkhe (in CC)
 Thanks in advance for your kind support.`,
+    customerSentAt: '2026-06-21T09:00:00Z',
     receivedAt: '2026-06-23T11:30:00Z',
+    forwardedBy: 'Priya Nair (India BDM)',
     partNumberExtracted: 'RP008',
     partNumberCorrected: 'RP008',
     serialNumberExtracted: 'O4QO-12659',

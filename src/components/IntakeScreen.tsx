@@ -1,7 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, ShieldCheck, HelpCircle, AlertCircle, Sparkles, Send, CheckCircle, ArrowRight, CornerUpRight, RefreshCw, Eye, X } from 'lucide-react';
+import { Mail, ShieldCheck, HelpCircle, AlertCircle, Sparkles, Send, CheckCircle, ArrowRight, CornerUpRight, RefreshCw, Eye, X, Clock, Sliders, TrendingUp, Check, Info, AlertTriangle, Play } from 'lucide-react';
 import { QuoteInquiry } from '../types';
+
+// Helper function to calculate latency between initial customer sent date and shared mailbox receipt date
+export const calculateLatency = (sentStr?: string, receivedStr?: string) => {
+  if (!sentStr || !receivedStr) return { minutes: 0, hours: 0, days: 0, formatted: 'N/A' };
+  const sent = new Date(sentStr);
+  const received = new Date(receivedStr);
+  const diffMs = received.getTime() - sent.getTime();
+  const diffMin = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+  const totalHours = diffMin / 60;
+  const days = Math.floor(totalHours / 24);
+  const hrs = Math.floor(totalHours % 24);
+  const mins = diffMin % 60;
+
+  let formatted = '';
+  if (days > 0) {
+    formatted = hrs > 0 ? `${days}d ${hrs}h` : `${days}d`;
+  } else if (hrs > 0) {
+    formatted = `${hrs}h ${mins}m`;
+  } else {
+    formatted = `${mins}m`;
+  }
+
+  return {
+    minutes: diffMin,
+    hours: totalHours,
+    days: days + hrs / 24,
+    formatted,
+  };
+};
 
 interface IntakeScreenProps {
   quotes: QuoteInquiry[];
@@ -20,6 +49,10 @@ export default function IntakeScreen({
   onSendClarification,
   onLogAsRfi,
 }: IntakeScreenProps) {
+  // SLA benchmark: flag anything forwarded later than 2 business days
+  const slaThresholdDays = 2;
+  const slaThresholdHours = slaThresholdDays * 24;
+
   // Filter for quotes that are unqualified or in clarification drafts
   const activeInflow = quotes.filter(
     (q) => q.status === 'unqualified' || q.status === 'clarification_draft' || q.status === 'awaiting_clarification'
@@ -135,23 +168,43 @@ Global Spare Parts Ltd`;
               const isSelected = quote.id === selectedQuote.id;
               const hasIncompleteData = !quote.partNumberExtracted || !quote.serialNumberExtracted;
               const isWaiting = quote.status === 'awaiting_clarification';
+              const latency = calculateLatency(quote.customerSentAt, quote.receivedAt);
+              const isLate = quote.customerSentAt ? latency.days > slaThresholdDays : false;
+              const isCritical = quote.customerSentAt ? latency.days > 4 : false;
 
               return (
                 <button
                   key={quote.id}
                   id={`inbox-item-${quote.id}`}
                   onClick={() => onSelect(quote.id)}
-                  className={`w-full text-left p-3.5 transition-all hover:bg-slate-50 relative flex flex-col gap-1 ${
-                    isSelected ? 'bg-[#004b93]/5 border-l-4 border-[#004b93]' : 'border-l-4 border-transparent'
+                  className={`w-full text-left p-3.5 transition-all hover:bg-slate-50 relative flex flex-col gap-1 border-l-4 ${
+                    isSelected
+                      ? 'bg-[#004b93]/5 border-l-[#004b93]'
+                      : isCritical
+                      ? 'border-l-rose-500 bg-rose-50/30'
+                      : isLate
+                      ? 'border-l-amber-400 bg-amber-50/20'
+                      : 'border-l-transparent'
                   }`}
                 >
                   <div className="flex justify-between items-start">
-                    <span className="font-bold text-slate-900 text-[12px] truncate max-w-[170px]">
+                    <span className="font-bold text-slate-900 text-[12px] truncate max-w-[150px]">
                       {quote.customerName}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono font-bold">
-                      {quote.id}
-                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {/* Forwarding delay badge — only show if late */}
+                      {quote.customerSentAt && isLate && (
+                        <span className={`text-[8px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5 ${
+                          isCritical
+                            ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                            : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        }`}>
+                          <Clock className="w-2 h-2" />
+                          {latency.formatted} delay
+                        </span>
+                      )}
+                      <span className="text-[9.5px] text-slate-400 font-mono font-bold">{quote.id}</span>
+                    </div>
                   </div>
 
                   <div className="font-bold text-[11px] text-slate-700 truncate">
@@ -163,7 +216,7 @@ Global Spare Parts Ltd`;
                   </p>
 
                   <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-slate-100">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-wrap">
                       {isWaiting ? (
                         <span className="bg-amber-50 text-amber-700 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
@@ -178,9 +231,14 @@ Global Spare Parts Ltd`;
                           <CheckCircle className="w-2.5 h-2.5 text-emerald-600" /> Data Ready
                         </span>
                       )}
+                      {/* Show forwarded-by in list only when SLA OK — subtle info */}
+                      {quote.customerSentAt && !isLate && quote.forwardedBy && (
+                        <span className="text-[8.5px] text-slate-400 font-medium truncate max-w-[100px]">
+                          via {quote.forwardedBy.split(' (')[0]}
+                        </span>
+                      )}
                     </div>
-
-                    <div className="flex items-center gap-0.5 text-slate-400 text-[9px] font-semibold">
+                    <div className="flex items-center gap-0.5 text-slate-400 text-[9px] font-semibold shrink-0">
                       <span>Conf: {quote.aiConfidence}%</span>
                     </div>
                   </div>
@@ -214,6 +272,116 @@ Global Spare Parts Ltd`;
             </div>
           </div>
         </div>
+
+        {/* Forwarding Pathway KPI Bar */}
+        {selectedQuote.customerSentAt && (() => {
+          const latency = calculateLatency(selectedQuote.customerSentAt, selectedQuote.receivedAt);
+          const isBreached = latency.days > slaThresholdDays;
+          const isCritical = latency.days > 4;
+          const formatTime = (isoStr: string) => {
+            const d = new Date(isoStr);
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' (' + d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ')';
+          };
+          // progress bar: proportional to 2-day SLA, capped at 100%
+          const pct = Math.min(100, (latency.days / slaThresholdDays) * 100);
+          return (
+            <div className={`px-3.5 pt-2 pb-2.5 border-b border-[#e1e6eb] ${
+              isCritical ? 'bg-rose-50/60' : isBreached ? 'bg-amber-50/50' : 'bg-[#004b93]/[0.03]'
+            }`}>
+              {/* Row 1: label + forwarded-by */}
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[9px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  Routing Pathway KPI
+                </span>
+                <div className="flex items-center gap-1 text-[9px]">
+                  <span className="text-slate-400 font-semibold">Forwarded By:</span>
+                  <span className="font-bold text-slate-700 bg-white border border-slate-200 px-1.5 py-0.5 rounded font-mono text-[8.5px] shadow-sm">
+                    {selectedQuote.forwardedBy || 'Regional Rep'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Row 2: timeline nodes + gap badge */}
+              <div className="flex items-center gap-2">
+                {/* Timeline pill */}
+                <div className="flex-1 bg-white rounded border border-slate-200 px-3 py-2 flex items-center justify-between shadow-sm">
+                  {/* Node 1 */}
+                  <div className="flex flex-col items-start gap-0.5">
+                    <div className="flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-[#004b93] ring-2 ring-[#004b93]/15 shrink-0"></span>
+                      <span className="text-[9.5px] font-bold text-slate-800">Customer Sent</span>
+                    </div>
+                    <span className="text-[8px] text-slate-400 font-mono pl-3">{formatTime(selectedQuote.customerSentAt)}</span>
+                  </div>
+
+                  {/* Connector line with label */}
+                  <div className="flex-1 mx-3 flex flex-col items-center gap-0.5">
+                    <div className={`w-full h-0 border-t-2 border-dashed ${
+                      isCritical ? 'border-rose-300' : isBreached ? 'border-amber-300' : 'border-slate-200'
+                    }`} />
+                    <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded border ${
+                      isCritical
+                        ? 'bg-rose-50 text-rose-600 border-rose-200'
+                        : isBreached
+                        ? 'bg-amber-50 text-amber-600 border-amber-200'
+                        : 'bg-slate-50 text-slate-400 border-slate-150'
+                    }`}>
+                      Forwarding Delay
+                    </span>
+                  </div>
+
+                  {/* Node 2 */}
+                  <div className="flex flex-col items-end gap-0.5">
+                    <div className="flex items-center gap-1">
+                      <span className="text-[9.5px] font-bold text-slate-800">Mailbox Received</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-400/15 shrink-0"></span>
+                    </div>
+                    <span className="text-[8px] text-slate-400 font-mono pr-3">{formatTime(selectedQuote.receivedAt)}</span>
+                  </div>
+                </div>
+
+                {/* Gap badge */}
+                <div className={`shrink-0 w-[72px] rounded border flex flex-col items-center justify-center py-1.5 text-center ${
+                  isCritical
+                    ? 'bg-rose-600 border-rose-700 text-white'
+                    : isBreached
+                    ? 'bg-amber-500 border-amber-600 text-white'
+                    : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                }`}>
+                  <Clock className={`w-3 h-3 mb-0.5 ${
+                    isCritical || isBreached ? 'text-white/80' : 'text-emerald-500'
+                  }`} />
+                  <span className="text-[13px] font-black font-mono leading-none">{latency.formatted}</span>
+                  <span className={`text-[7.5px] font-bold mt-1 ${
+                    isCritical || isBreached ? 'text-white/90' : 'text-emerald-700'
+                  }`}>
+                    {isCritical ? '🔴 CRITICAL' : isBreached ? '⚠ LATE' : '✓ SLA OK'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Row 3: SLA progress bar */}
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex-1 h-1 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      isCritical ? 'bg-rose-500' : isBreached ? 'bg-amber-400' : 'bg-emerald-400'
+                    }`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <span className={`text-[8px] font-bold shrink-0 ${
+                  isCritical ? 'text-rose-600' : isBreached ? 'text-amber-600' : 'text-emerald-600'
+                }`}>
+                  {isBreached
+                    ? `+${(latency.days - slaThresholdDays).toFixed(1)}d over 2-day SLA`
+                    : `${(slaThresholdDays - latency.days).toFixed(1)}d SLA remaining`}
+                </span>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Email Content Body Preview */}
         <div className="p-3.5 bg-slate-50/40 border-b border-[#e1e6eb] max-h-36 overflow-y-auto" id="email-body-preview">
