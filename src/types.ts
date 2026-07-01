@@ -31,4 +31,20 @@ export interface QuoteInquiry {
   attachments?: { name: string; type: string; size: string; content?: string }[];
   customerSentAt?: string;
   forwardedBy?: string;
+  sfdcOpportunity?: {
+    accountName: string;
+    bookingEntity: string;
+    opportunityName: string;
+    offerType: string;
+    contactName: string;
+    contactTitle: string;
+    stage: 'Prospecting' | 'Qualification' | 'Proposal' | 'Bid Negotiation' | 'Closed Won' | 'Closed Lost';
+    chanceToWin: number;
+    chanceOfOpportunity: number;
+    estimatedValue: number;
+    currency: string;
+    closeDate: string;
+    region: string;
+    productLine: string;
+  };
 }

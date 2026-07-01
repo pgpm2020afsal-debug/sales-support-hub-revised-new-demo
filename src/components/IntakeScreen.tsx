@@ -131,7 +131,7 @@ Global Spare Parts Ltd`;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5" id="intake-screen-layout">
       {/* LEFT SIDE: Email Inbox */}
-      <div className="lg:col-span-5 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs h-[620px] overflow-hidden" id="inbox-container">
+      <div className="lg:col-span-5 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs overflow-hidden" id="inbox-container" style={{ minHeight: '420px', maxHeight: '620px' }}>
         {/* Inbox Header */}
         <div className="p-3.5 border-b border-[#e1e6eb] bg-white flex flex-col gap-2.5">
           <div className="flex items-center justify-between">
@@ -250,7 +250,7 @@ Global Spare Parts Ltd`;
       </div>
 
       {/* RIGHT SIDE: AI Staging Area */}
-      <div className="lg:col-span-7 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs h-[620px] overflow-hidden" id="staging-container">
+      <div className="lg:col-span-7 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs overflow-hidden" id="staging-container" style={{ minHeight: '520px', maxHeight: '820px' }}>
         {/* Email Header View */}
         <div className="p-3.5 border-b border-[#e1e6eb] bg-white flex justify-between items-center gap-3">
           <div className="min-w-0">
@@ -305,22 +305,23 @@ Global Spare Parts Ltd`;
               {/* Row 2: timeline nodes + gap badge */}
               <div className="flex items-center gap-2">
                 {/* Timeline pill */}
-                <div className="flex-1 bg-white rounded border border-slate-200 px-3 py-2 flex items-center justify-between shadow-sm">
+                <div className="flex-1 min-w-0 bg-white rounded border border-slate-200 px-2 sm:px-3 py-2 flex items-center justify-between shadow-sm">
                   {/* Node 1 */}
-                  <div className="flex flex-col items-start gap-0.5">
+                  <div className="flex flex-col items-start gap-0.5 min-w-0">
                     <div className="flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-[#004b93] ring-2 ring-[#004b93]/15 shrink-0"></span>
-                      <span className="text-[9.5px] font-bold text-slate-800">Customer Sent</span>
+                      <span className="text-[9.5px] font-bold text-slate-800 hidden sm:block">Customer Sent</span>
+                      <span className="text-[9px] font-bold text-slate-800 sm:hidden">Sent</span>
                     </div>
-                    <span className="text-[8px] text-slate-400 font-mono pl-3">{formatTime(selectedQuote.customerSentAt)}</span>
+                    <span className="text-[8px] text-slate-400 font-mono pl-3 truncate max-w-[80px] sm:max-w-none">{formatTime(selectedQuote.customerSentAt)}</span>
                   </div>
 
                   {/* Connector line with label */}
-                  <div className="flex-1 mx-3 flex flex-col items-center gap-0.5">
+                  <div className="flex-1 mx-1 sm:mx-3 flex flex-col items-center gap-0.5">
                     <div className={`w-full h-0 border-t-2 border-dashed ${
                       isCritical ? 'border-rose-300' : isBreached ? 'border-amber-300' : 'border-slate-200'
                     }`} />
-                    <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded border ${
+                    <span className={`text-[7.5px] font-bold px-1 py-0.5 rounded border hidden sm:block ${
                       isCritical
                         ? 'bg-rose-50 text-rose-600 border-rose-200'
                         : isBreached
@@ -332,12 +333,13 @@ Global Spare Parts Ltd`;
                   </div>
 
                   {/* Node 2 */}
-                  <div className="flex flex-col items-end gap-0.5">
+                  <div className="flex flex-col items-end gap-0.5 min-w-0">
                     <div className="flex items-center gap-1">
-                      <span className="text-[9.5px] font-bold text-slate-800">Mailbox Received</span>
+                      <span className="text-[9.5px] font-bold text-slate-800 hidden sm:block">Mailbox Received</span>
+                      <span className="text-[9px] font-bold text-slate-800 sm:hidden">Received</span>
                       <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-400/15 shrink-0"></span>
                     </div>
-                    <span className="text-[8px] text-slate-400 font-mono pr-3">{formatTime(selectedQuote.receivedAt)}</span>
+                    <span className="text-[8px] text-slate-400 font-mono pr-3 truncate max-w-[80px] sm:max-w-none">{formatTime(selectedQuote.receivedAt)}</span>
                   </div>
                 </div>
 
@@ -426,7 +428,7 @@ Global Spare Parts Ltd`;
             <span className="text-[10px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 border border-amber-250 rounded-full">UNQUALIFIED</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Part Number Field */}
             <div className="flex flex-col gap-1">
               <label className="text-[11px] font-bold text-slate-700 flex items-center justify-between">
@@ -497,6 +499,56 @@ Global Spare Parts Ltd`;
             </div>
           </div>
 
+          {/* SFDC AI Extracted Opportunity Fields */}
+          {selectedQuote.sfdcOpportunity && (
+            <div className="border border-[#004b93]/20 rounded-lg overflow-hidden" id="sfdc-opportunity-panel">
+              {/* Panel header */}
+              <div className="flex items-center justify-between px-3 py-2.5 bg-[#004b93]/5 border-b border-[#004b93]/15">
+                <div className="flex items-center gap-1.5">
+                  <span className="p-1 rounded bg-[#004b93]/10 text-[#004b93]">
+                    <Sparkles className="w-3 h-3" />
+                  </span>
+                  <div>
+                    <h4 className="font-sans font-bold text-slate-900 text-[11px]">AI EXTRACTED OPPORTUNITY FIELDS</h4>
+                    <p className="text-[9px] text-slate-500">Index-matched from CRM & email domain. Verify before converting to SFDC opportunity.</p>
+                  </div>
+                </div>
+                <span className="text-[9px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 border border-amber-200 rounded-full shrink-0">UNVERIFIED</span>
+              </div>
+
+              {/* Scrollable fields list */}
+              <div className="max-h-64 overflow-y-auto bg-white divide-y divide-slate-100">
+                {([
+                  { label: 'Account Name',         value: selectedQuote.sfdcOpportunity.accountName,                                                                    required: true  },
+                  { label: 'Booking Entity',        value: selectedQuote.sfdcOpportunity.bookingEntity,                                                                  required: true  },
+                  { label: 'Opportunity Name',      value: selectedQuote.sfdcOpportunity.opportunityName,                                                                required: true  },
+                  { label: 'Chance to Win (%)',     value: `${selectedQuote.sfdcOpportunity.chanceToWin}%`,                                                              required: true  },
+                  { label: 'Offer Type',            value: selectedQuote.sfdcOpportunity.offerType,                                                                      required: true  },
+                  { label: 'Chance of Opportunity',value: `${selectedQuote.sfdcOpportunity.chanceOfOpportunity}%`,                                                       required: true  },
+                  { label: 'Close Date',            value: new Date(selectedQuote.sfdcOpportunity.closeDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), required: true  },
+                  { label: 'Opportunity Currency', value: selectedQuote.sfdcOpportunity.currency,                                                                        required: true  },
+                  { label: 'Op Amount',             value: selectedQuote.sfdcOpportunity.estimatedValue.toLocaleString('en-GB', { minimumFractionDigits: 2 }),            required: true  },
+                  { label: 'Stage',                 value: selectedQuote.sfdcOpportunity.stage,                                                                          required: false },
+                  { label: 'Region',                value: selectedQuote.sfdcOpportunity.region,                                                                          required: false },
+                  { label: 'Product Line',          value: selectedQuote.sfdcOpportunity.productLine,                                                                     required: false },
+                ] as { label: string; value: string; required: boolean }[]).map(({ label, value, required }) => (
+                  <div key={label} className="px-3 py-2 flex flex-col gap-0.5">
+                    <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-0.5">
+                      {label}{required && <span className="text-rose-500">*</span>}
+                    </label>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex-1 text-[11px] font-mono font-semibold text-slate-800 bg-slate-50 border border-[#e1e6eb] rounded px-2.5 py-1 truncate">
+                        {value}
+                      </div>
+                      <span className="text-[8px] text-[#004b93] font-bold bg-[#004b93]/5 px-1.5 py-0.5 rounded border border-[#004b93]/10 shrink-0">Extracted</span>
+                    </div>
+                    <p className="text-[8px] text-slate-400 font-mono">Extracted: <span className="font-semibold text-slate-500">{value}</span></p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Expandable Draft Email Composer (Clarification vs RFI) */}
           <AnimatePresence>
             {composerType !== null && (
@@ -563,8 +615,8 @@ Global Spare Parts Ltd`;
         </div>
 
         {/* Action Footer */}
-        <div className="p-3 bg-slate-50 border-t border-[#e1e6eb] flex flex-col sm:flex-row justify-end items-center gap-2">
-          <div className="text-slate-500 text-[10px] mr-auto flex flex-col gap-0.5 py-1">
+        <div className="p-3 bg-slate-50 border-t border-[#e1e6eb] flex flex-col gap-2">
+          <div className="text-slate-500 text-[10px] flex flex-col gap-0.5 py-1">
             <div className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-[#004b93]" />
               <span className="font-bold text-slate-750">Human-in-the-Loop Protocol Enforced</span>
@@ -573,10 +625,10 @@ Global Spare Parts Ltd`;
               Confirming parameters matches specs into the SAP CPQ pipeline.
             </div>
           </div>
-
+          <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => setComposerType(composerType === 'clarification' ? null : 'clarification')}
-            className={`w-full sm:w-auto px-4 py-1.5 border text-xs font-bold rounded-md transition-colors flex items-center justify-center gap-1 shadow-2xs cursor-pointer ${
+            className={`flex-1 px-4 py-1.5 border text-xs font-bold rounded-md transition-colors flex items-center justify-center gap-1 shadow-2xs cursor-pointer ${
               composerType === 'clarification'
                 ? 'border-amber-400 bg-amber-50 text-amber-850'
                 : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
@@ -588,7 +640,7 @@ Global Spare Parts Ltd`;
 
           <button
             onClick={() => setComposerType(composerType === 'rfi' ? null : 'rfi')}
-            className={`w-full sm:w-auto px-4 py-1.5 border text-xs font-bold rounded-md transition-colors flex items-center justify-center gap-1 shadow-2xs cursor-pointer ${
+            className={`flex-1 px-4 py-1.5 border text-xs font-bold rounded-md transition-colors flex items-center justify-center gap-1 shadow-2xs cursor-pointer ${
               composerType === 'rfi'
                 ? 'border-[#004b93] bg-[#004b93]/5 text-[#004b93]'
                 : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
@@ -601,13 +653,14 @@ Global Spare Parts Ltd`;
           <button
             onClick={handleApprove}
             disabled={!partNumber || !serialNumber}
-            className="w-full sm:w-auto px-5 py-2 bg-[#004b93] hover:bg-[#003d78] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white rounded-md text-xs font-bold transition-all shadow-2xs flex flex-col items-center justify-center gap-0.5 cursor-pointer"
+            className="flex-1 px-5 py-2 bg-[#004b93] hover:bg-[#003d78] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white rounded-md text-xs font-bold transition-all shadow-2xs flex flex-col items-center justify-center gap-0.5 cursor-pointer"
             id="btn-approve-intake"
             title="Convert as Opportunity in SFDC"
           >
             <span>Approve & Register Opportunity in SFDC</span>
             <span className="text-[9px] text-blue-100 font-medium">Convert as Opportunity in SFDC</span>
           </button>
+          </div>
         </div>
       </div>
 

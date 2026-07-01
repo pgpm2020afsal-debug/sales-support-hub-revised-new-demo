@@ -76,8 +76,9 @@ export default function RoutingScreen({
         </div>
       </div>
 
-      {/* Kanban Board columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4" id="kanban-board">
+      {/* Kanban Board columns — horizontal scroll on mobile */}
+      <div className="-mx-1 overflow-x-auto pb-2" id="kanban-scroll-wrapper">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 min-w-[640px] px-1" id="kanban-board">
         {/* COLUMN 1: Needs Routing */}
         <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col min-h-[500px]" id="col-needs-routing">
           <div className="flex items-center justify-between mb-3 px-1 border-b border-slate-100 pb-2">
@@ -461,6 +462,7 @@ export default function RoutingScreen({
               ))
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>

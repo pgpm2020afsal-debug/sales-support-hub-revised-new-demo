@@ -32,7 +32,11 @@ export default function App() {
   const [selectedQuoteId, setSelectedQuoteId] = useState('REQ-2026-003');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showSuccessModal, setShowSuccessModal] = useState<string | null>(null);
-  const [showTutorial, setShowTutorial] = useState(true);
+  const [dismissedBanners, setDismissedBanners] = useState<Set<string>>(new Set());
+
+  const dismissBanner = (key: string) => {
+    setDismissedBanners((prev) => new Set([...prev, key]));
+  };
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -348,11 +352,11 @@ export default function App() {
 
       <div>
         {/* APP HEADER */}
-        <header className="bg-white border-b border-[#e1e6eb] px-6 sticky top-0 z-40 shadow-xs" id="global-header">
+        <header className="bg-white border-b border-[#e1e6eb] px-3 sm:px-6 sticky top-0 z-40 shadow-xs" id="global-header">
           <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
             
             {/* Logo and Nav Menu */}
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-4 sm:gap-10">
               <span className="font-sans font-extrabold tracking-wider text-[#004b93] text-xl select-none">SULZER</span>
               
               <nav className="hidden md:flex items-stretch h-14">
@@ -413,13 +417,13 @@ export default function App() {
             </div>
 
             {/* Right Header items matching Sulzer screenshot */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-3">
                 {/* Global Search Container */}
                 <div className="relative flex items-center" id="global-search-container">
                   <input
                     type="text"
-                    placeholder="Global Search (Ref, Name, Part...)"
+                    placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
@@ -428,7 +432,7 @@ export default function App() {
                     onFocus={() => {
                       if (searchQuery.length > 0) setShowSearchResults(true);
                     }}
-                    className="bg-slate-50 hover:bg-slate-100 focus:bg-white text-[11px] text-slate-700 placeholder-slate-400 border border-slate-200 focus:border-[#004b93] focus:ring-1 focus:ring-[#004b93] rounded-md pl-7 pr-7 py-1 w-44 focus:w-56 transition-all outline-none font-medium"
+                    className="bg-slate-50 hover:bg-slate-100 focus:bg-white text-[11px] text-slate-700 placeholder-slate-400 border border-slate-200 focus:border-[#004b93] focus:ring-1 focus:ring-[#004b93] rounded-md pl-7 pr-7 py-1 w-24 sm:w-44 focus:w-36 sm:focus:w-56 transition-all outline-none font-medium"
                     id="global-search-input"
                   />
                   <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
@@ -520,9 +524,9 @@ export default function App() {
               </div>
 
               {/* Reset State & Guide */}
-              <div className="flex items-center gap-2.5 ml-2 border-l border-slate-200 pl-4">
+              <div className="hidden sm:flex items-center gap-2.5 ml-2 border-l border-slate-200 pl-4">
                 <button
-                  onClick={() => setShowTutorial(!showTutorial)}
+                  onClick={() => setShowMenu(true)}
                   className="text-[10px] text-slate-500 hover:text-[#004b93] font-semibold transition-all"
                   id="btn-tutorial-toggle"
                 >
@@ -570,26 +574,103 @@ export default function App() {
           </button>
         </div>
 
-        {/* PERSISTENT TUTORIAL / PROTOCOL ACCENT BAR MATCHING SULZER PORTAL */}
+        {/* CONTEXT-AWARE BANNER — only shown when relevant, per tab */}
         <AnimatePresence>
-          {showTutorial && (
+          {/* INTAKE TAB: unqualified items pending */}
+          {activeTab === 'intake' && countIntake > 0 && !dismissedBanners.has('intake-pending') && (
             <motion.div
+              key="banner-intake"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="bg-[#fff9e6] border-b border-[#f3e5b5] text-amber-900 overflow-hidden shadow-xs"
-              id="tutorial-panel"
+              className="bg-[#fff9e6] border-b border-[#f3e5b5] text-amber-900 overflow-hidden"
             >
-              <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-sans font-medium">
+              <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
                 <div className="flex items-center gap-2 leading-tight">
-                  <span className="text-amber-500 text-sm">⚠️</span>
+                  <span className="text-amber-500">⚠️</span>
                   <span>
-                    <strong>Max throughput reached:</strong> Make sure to qualify equipment serial & part numbers manually, then route Complex items to either <strong>Pune Hub</strong> or <strong>Local Back office</strong>.
+                    <strong>{countIntake} {countIntake === 1 ? 'inquiry' : 'inquiries'} pending qualification.</strong> Verify opportunity fields manually before converting it into an opportunity.
                   </span>
                 </div>
                 <button
-                  onClick={() => setShowTutorial(false)}
+                  onClick={() => dismissBanner('intake-pending')}
                   className="text-amber-700 hover:text-amber-900 font-bold text-[10px] uppercase transition-colors shrink-0"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ROUTING TAB: qualified items waiting to be dispatched */}
+          {activeTab === 'routing' && countRouting > 0 && !dismissedBanners.has('routing-pending') && (
+            <motion.div
+              key="banner-routing"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="bg-amber-50 border-b border-amber-200 text-amber-900 overflow-hidden"
+            >
+              <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
+                <div className="flex items-center gap-2 leading-tight">
+                  <span className="text-amber-500">⚠️</span>
+                  <span>
+                    <strong>{countRouting} qualified {countRouting === 1 ? 'item' : 'items'} awaiting dispatch.</strong> Route Complex items to <strong>Local Back Office</strong> or <strong>Pune Hub</strong>, and Simple items to the AI Agent.
+                  </span>
+                </div>
+                <button
+                  onClick={() => dismissBanner('routing-pending')}
+                  className="text-amber-700 hover:text-amber-900 font-bold text-[10px] uppercase transition-colors shrink-0"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* QUOTE TAB: items ready to send */}
+          {activeTab === 'quote' && countQuote > 0 && !dismissedBanners.has('quote-pending') && (
+            <motion.div
+              key="banner-quote"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="bg-[#004b93]/5 border-b border-[#004b93]/15 text-[#004b93] overflow-hidden"
+            >
+              <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
+                <div className="flex items-center gap-2 leading-tight">
+                  <span>💡</span>
+                  <span>
+                    <strong>{countQuote} {countQuote === 1 ? 'quote' : 'quotes'} ready for final review.</strong> Trigger SAP CPQ compilation, review the PDF, then Approve & Send to dispatch to customer.
+                  </span>
+                </div>
+                <button
+                  onClick={() => dismissBanner('quote-pending')}
+                  className="text-[#004b93] hover:text-[#003d78] font-bold text-[10px] uppercase transition-colors shrink-0"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ALL CLEAR: nothing pending on Intake */}
+          {activeTab === 'intake' && countIntake === 0 && !dismissedBanners.has('intake-clear') && (
+            <motion.div
+              key="banner-clear"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="bg-emerald-50 border-b border-emerald-200 text-emerald-800 overflow-hidden"
+            >
+              <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
+                <div className="flex items-center gap-2">
+                  <span>✅</span>
+                  <span><strong>Intake queue is clear.</strong> All inquiries have been qualified or resolved.</span>
+                </div>
+                <button
+                  onClick={() => dismissBanner('intake-clear')}
+                  className="text-emerald-700 hover:text-emerald-900 font-bold text-[10px] uppercase transition-colors shrink-0"
                 >
                   Dismiss
                 </button>
@@ -599,7 +680,7 @@ export default function App() {
         </AnimatePresence>
 
         {/* MAIN STAGE CANVAS */}
-        <main className="max-w-7xl mx-auto p-6 flex-1">
+        <main className="max-w-7xl mx-auto p-3 sm:p-6 flex-1">
           <AnimatePresence mode="wait">
             {activeTab === 'intake' && (
               <motion.div

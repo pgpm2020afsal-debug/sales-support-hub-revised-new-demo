@@ -401,15 +401,16 @@ export default function QuoteScreen({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5" id="quote-screen-layout">
-      
+    <div className="flex flex-col gap-5" id="quote-screen-layout">
+      {/* Top row: sidebar + document preview + copilot */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
       {/* SIDEBAR LIST (Col-span-3): Quick list of approved/completed quote requests */}
-      <div className="lg:col-span-3 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs h-[650px] overflow-hidden" id="quote-sidebar">
+      <div className="lg:col-span-3 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs lg:h-[650px] overflow-hidden" id="quote-sidebar">
         <div className="p-3.5 border-b border-[#e1e6eb] bg-slate-50">
           <h3 className="font-sans font-bold text-slate-900 text-[11px] uppercase tracking-wider">Hub Process Queue</h3>
           <p className="text-[10px] text-slate-500 font-medium">Ready for final dispatch</p>
         </div>
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-100" id="quote-sidebar-list">
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-100 max-h-48 lg:max-h-none" id="quote-sidebar-list">
           {hubQuotes.map((quote) => {
             const isSelected = quote.id === selectedQuote.id;
             const isCompleted = quote.status === 'completed';
@@ -460,7 +461,7 @@ export default function QuoteScreen({
       </div>
 
       {/* DOCUMENT PREVIEW (Col-span-6): Interactive drafted files */}
-      <div className="lg:col-span-6 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs h-[650px] overflow-hidden" id="document-preview-container">
+      <div className="lg:col-span-6 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs lg:h-[650px] overflow-hidden" id="document-preview-container">
         
         {/* Tab Selection */}
         <div className="flex border-b border-[#e1e6eb] bg-slate-50 p-2 gap-2 shrink-0">
@@ -648,47 +649,47 @@ export default function QuoteScreen({
                 <div className="flex flex-col flex-1 overflow-hidden bg-slate-200" id="pdf-view-wrapper">
                   {/* Page selector bar */}
                   <div className="flex items-center justify-between border-b border-[#e1e6eb] bg-slate-50 p-2 shrink-0 select-none">
-                    <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
+                    <div className="flex items-center gap-1 overflow-x-auto py-0.5 flex-1 min-w-0">
                       <span className="text-[10px] text-slate-400 font-bold tracking-wider uppercase pl-1 shrink-0">View:</span>
                       <button
                         onClick={() => setPdfPage('all')}
-                        className={`px-2.5 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
+                        className={`px-2 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
                           pdfPage === 'all'
                             ? 'bg-[#004b93] text-white shadow-2xs'
                             : 'bg-white hover:bg-slate-100 text-slate-600 border border-[#e1e6eb]'
                         }`}
                       >
-                        All (3 Pages)
+                        All
                       </button>
                       <button
                         onClick={() => setPdfPage(1)}
-                        className={`px-2.5 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
+                        className={`px-2 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
                           pdfPage === 1
                             ? 'bg-[#004b93] text-white shadow-2xs'
                             : 'bg-white hover:bg-slate-100 text-slate-600 border border-[#e1e6eb]'
                         }`}
                       >
-                        Page 1 (Letter)
+                        P1
                       </button>
                       <button
                         onClick={() => setPdfPage(2)}
-                        className={`px-2.5 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
+                        className={`px-2 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
                           pdfPage === 2
                             ? 'bg-[#004b93] text-white shadow-2xs'
                             : 'bg-white hover:bg-slate-100 text-slate-600 border border-[#e1e6eb]'
                         }`}
                       >
-                        Page 2 (Products)
+                        P2
                       </button>
                       <button
                         onClick={() => setPdfPage(3)}
-                        className={`px-2.5 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
+                        className={`px-2 py-1 text-[9px] font-bold rounded-md transition-all shrink-0 cursor-pointer ${
                           pdfPage === 3
                             ? 'bg-[#004b93] text-white shadow-2xs'
                             : 'bg-white hover:bg-slate-100 text-slate-600 border border-[#e1e6eb]'
                         }`}
                       >
-                        Page 3 (Terms)
+                        P3
                       </button>
                     </div>
                     <button
@@ -701,7 +702,7 @@ export default function QuoteScreen({
                   </div>
 
                   {/* Scrollable canvas of pages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-6 flex flex-col items-center" id="pdf-scrollable-pages" style={{ scrollBehavior: 'smooth' }}>
+                  <div className="flex-1 overflow-y-auto overflow-x-auto p-4 space-y-6 flex flex-col items-center" id="pdf-scrollable-pages" style={{ scrollBehavior: 'smooth' }}>
                     {/* PAGE 1: COVER LETTER */}
                     {(pdfPage === 'all' || pdfPage === 1) && (() => {
                       const addr = getCustomerAddress(selectedQuote);
@@ -709,7 +710,7 @@ export default function QuoteScreen({
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white border border-slate-300 shadow-md p-10 max-w-[580px] w-full min-h-[780px] relative flex flex-col justify-between select-text"
+                          className="bg-white border border-slate-300 shadow-md p-6 sm:p-10 w-full max-w-[580px] min-w-[320px] min-h-[780px] relative flex flex-col justify-between select-text"
                           id="pdf-page-1"
                         >
                           {/* Watermark for draft status */}
@@ -805,7 +806,7 @@ export default function QuoteScreen({
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white border border-slate-300 shadow-md p-10 max-w-[580px] w-full min-h-[780px] relative flex flex-col justify-between select-text"
+                          className="bg-white border border-slate-300 shadow-md p-6 sm:p-10 w-full max-w-[580px] min-w-[320px] min-h-[780px] relative flex flex-col justify-between select-text"
                           id="pdf-page-2"
                         >
                           <div>
@@ -890,7 +891,7 @@ export default function QuoteScreen({
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white border border-slate-300 shadow-md p-10 max-w-[580px] w-full min-h-[780px] relative flex flex-col justify-between select-text"
+                          className="bg-white border border-slate-300 shadow-md p-6 sm:p-10 w-full max-w-[580px] min-w-[320px] min-h-[780px] relative flex flex-col justify-between select-text"
                           id="pdf-page-3"
                         >
                           <div>
@@ -1002,7 +1003,7 @@ export default function QuoteScreen({
       </div>
 
       {/* AI CO-PILOT (Col-span-3): Chat assist panel */}
-      <div className="lg:col-span-3 flex flex-col bg-slate-50 border border-[#e1e6eb] rounded-lg shadow-2xs h-[650px] overflow-hidden" id="copilot-container">
+      <div className="lg:col-span-3 flex flex-col bg-slate-50 border border-[#e1e6eb] rounded-lg shadow-2xs lg:h-[650px] overflow-hidden" id="copilot-container">
         {/* CoPilot Header */}
         <div className="p-3 border-b border-[#e1e6eb] bg-white flex items-center justify-between">
           <div className="flex items-center gap-1.5">
@@ -1231,8 +1232,10 @@ export default function QuoteScreen({
         </div>
       </div>
 
-      {/* STICKY FOOTER (Col-span-12): Global confirmation action bar */}
-      <div className="col-span-12 bg-slate-900 text-white rounded-lg p-3 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3 mt-1 border border-slate-800" id="quote-sticky-footer">
+      </div>{/* end top row grid */}
+
+      {/* STICKY FOOTER: Global confirmation action bar */}
+      <div className="bg-slate-900 text-white rounded-lg p-3 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-slate-800" id="quote-sticky-footer">
         <div className="flex items-center gap-2.5">
           <span className="p-1.5 rounded-md bg-slate-800 border border-slate-750 text-emerald-400">
             <ShieldCheck className="w-5 h-5" />
@@ -1245,7 +1248,7 @@ export default function QuoteScreen({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
           <div className="text-right">
             <span className="text-[8px] text-slate-400 uppercase tracking-wider block font-bold">RECALCULATED TOTAL</span>
             <span className="text-lg font-mono font-black text-white">${grandTotal.toFixed(2)}</span>
@@ -1254,7 +1257,7 @@ export default function QuoteScreen({
           <button
             onClick={() => onApproveAndSend(selectedQuote.id)}
             disabled={selectedQuote.status === 'completed' || !isQuoteTriggered}
-            className="w-full md:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white rounded-md text-xs font-bold shadow-2xs transition-all flex items-center justify-center gap-1 cursor-pointer"
+            className="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white rounded-md text-xs font-bold shadow-2xs transition-all flex items-center justify-center gap-1 cursor-pointer"
             id="btn-approve-and-send"
           >
             {selectedQuote.status === 'completed' ? (
@@ -1275,7 +1278,7 @@ export default function QuoteScreen({
             )}
           </button>
         </div>
-      </div>
+      </div>{/* end footer */}
     </div>
   );
 }
