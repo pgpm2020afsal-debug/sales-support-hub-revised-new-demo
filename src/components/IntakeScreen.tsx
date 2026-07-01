@@ -131,7 +131,7 @@ Global Spare Parts Ltd`;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5" id="intake-screen-layout">
       {/* LEFT SIDE: Email Inbox */}
-      <div className="lg:col-span-5 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs overflow-hidden" id="inbox-container" style={{ minHeight: '420px', maxHeight: '620px' }}>
+      <div className="lg:col-span-5 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs overflow-hidden" id="inbox-container">
         {/* Inbox Header */}
         <div className="p-3.5 border-b border-[#e1e6eb] bg-white flex flex-col gap-2.5">
           <div className="flex items-center justify-between">
@@ -158,7 +158,7 @@ Global Spare Parts Ltd`;
         </div>
 
         {/* Inbox List */}
-        <div className="flex-1 overflow-y-auto divide-y divide-[#e1e6eb]" id="inbox-list">
+        <div className="overflow-y-auto divide-y divide-[#e1e6eb] max-h-[50vh] lg:max-h-[70vh]" id="inbox-list">
           {filteredInflow.length === 0 ? (
             <div className="p-6 text-center text-slate-400 text-xs">
               No matching messages found.
@@ -250,7 +250,7 @@ Global Spare Parts Ltd`;
       </div>
 
       {/* RIGHT SIDE: AI Staging Area */}
-      <div className="lg:col-span-7 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs overflow-hidden" id="staging-container" style={{ minHeight: '520px', maxHeight: '820px' }}>
+      <div className="lg:col-span-7 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-xs overflow-hidden" id="staging-container">
         {/* Email Header View */}
         <div className="p-3.5 border-b border-[#e1e6eb] bg-white flex justify-between items-center gap-3">
           <div className="min-w-0">
@@ -386,7 +386,7 @@ Global Spare Parts Ltd`;
         })()}
 
         {/* Email Content Body Preview */}
-        <div className="p-3.5 bg-slate-50/40 border-b border-[#e1e6eb] max-h-36 overflow-y-auto" id="email-body-preview">
+        <div className="p-3.5 bg-slate-50/40 border-b border-[#e1e6eb] max-h-28 overflow-y-auto" id="email-body-preview">
           <pre className="text-slate-600 text-[11px] font-sans whitespace-pre-wrap leading-relaxed">
             {selectedQuote.emailBody}
           </pre>
@@ -414,7 +414,7 @@ Global Spare Parts Ltd`;
         )}
 
         {/* AI Staging Area Fields */}
-        <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-4 bg-white relative" id="ai-staging-panel">
+        <div className="p-4 overflow-y-auto flex flex-col gap-4 bg-white relative" id="ai-staging-panel">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <div className="flex items-center gap-1.5">
               <span className="p-1 rounded bg-[#004b93]/10 text-[#004b93]">
@@ -517,7 +517,7 @@ Global Spare Parts Ltd`;
               </div>
 
               {/* Scrollable fields list */}
-              <div className="max-h-64 overflow-y-auto bg-white divide-y divide-slate-100">
+              <div className="overflow-y-auto bg-white divide-y divide-slate-100" style={{ maxHeight: '280px' }}>
                 {([
                   { label: 'Account Name',         value: selectedQuote.sfdcOpportunity.accountName,                                                                    required: true  },
                   { label: 'Booking Entity',        value: selectedQuote.sfdcOpportunity.bookingEntity,                                                                  required: true  },

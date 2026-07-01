@@ -308,10 +308,10 @@ export default function App() {
   const activeModalQuote = quotes.find((q) => q.id === showSuccessModal);
 
   return (
-    <div className="min-h-screen bg-[#eff3f6] text-[#1e293b] font-sans flex flex-col justify-between" id="app-workspace">
+    <div className="min-h-screen bg-[#eff3f6] text-[#1e293b] font-sans flex flex-col overflow-x-hidden" id="app-workspace">
       
       {/* GLOBAL TOAST STACK */}
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full" id="notification-toasts">
+      <div className="fixed top-4 right-2 sm:right-4 z-50 flex flex-col gap-2 w-[calc(100vw-1rem)] sm:max-w-sm" id="notification-toasts">
         <AnimatePresence>
           {notifications.map((notif) => (
             <motion.div
@@ -353,10 +353,10 @@ export default function App() {
       <div>
         {/* APP HEADER */}
         <header className="bg-white border-b border-[#e1e6eb] px-3 sm:px-6 sticky top-0 z-40 shadow-xs" id="global-header">
-          <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
+          <div className="max-w-7xl mx-auto flex items-center justify-between h-14 min-w-0">
             
             {/* Logo and Nav Menu */}
-            <div className="flex items-center gap-4 sm:gap-10">
+            <div className="flex items-center gap-4 sm:gap-10 min-w-0">
               <span className="font-sans font-extrabold tracking-wider text-[#004b93] text-xl select-none">SULZER</span>
               
               <nav className="hidden md:flex items-stretch h-14">
@@ -417,7 +417,7 @@ export default function App() {
             </div>
 
             {/* Right Header items matching Sulzer screenshot */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               <div className="flex items-center gap-2 sm:gap-3">
                 {/* Global Search Container */}
                 <div className="relative flex items-center" id="global-search-container">
@@ -680,7 +680,7 @@ export default function App() {
         </AnimatePresence>
 
         {/* MAIN STAGE CANVAS */}
-        <main className="max-w-7xl mx-auto p-3 sm:p-6 flex-1">
+        <main className="max-w-7xl mx-auto w-full p-3 sm:p-6">
           <AnimatePresence mode="wait">
             {activeTab === 'intake' && (
               <motion.div
@@ -746,7 +746,7 @@ export default function App() {
       </div>
 
       {/* FOOTER METRICS */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-6 px-6" id="global-footer">
+      <footer className="bg-white border-t border-slate-200 mt-8 py-5 px-4 sm:px-6" id="global-footer">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
           <div>
             <span>Sales Support Hub Platform © 2026. Enforcing <strong>100% human-verified qualification protocol</strong>.</span>
@@ -858,7 +858,7 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl border-l border-[#e1e6eb] z-50 flex flex-col overflow-hidden"
+              className="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl border-l border-[#e1e6eb] z-50 flex flex-col overflow-hidden"
               id="menu-drawer-container"
             >
               {/* Drawer Header */}

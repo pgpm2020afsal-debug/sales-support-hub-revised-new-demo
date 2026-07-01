@@ -80,7 +80,7 @@ export default function RoutingScreen({
       <div className="-mx-1 overflow-x-auto pb-2" id="kanban-scroll-wrapper">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 min-w-[640px] px-1" id="kanban-board">
         {/* COLUMN 1: Needs Routing */}
-        <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col min-h-[500px]" id="col-needs-routing">
+        <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col" id="col-needs-routing">
           <div className="flex items-center justify-between mb-3 px-1 border-b border-slate-100 pb-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-slate-400"></span>
@@ -91,9 +91,9 @@ export default function RoutingScreen({
             </span>
           </div>
 
-          <div className="flex-1 flex flex-col gap-3 overflow-y-auto" id="backlog-cards">
+          <div className="flex flex-col gap-3" id="backlog-cards">
             {backlogQuotes.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
+              <div className="flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
                 <CheckSquare className="w-6 h-6 text-slate-300 mb-1.5" />
                 No backlog inquiries. Complete Stage 1 qualification.
               </div>
@@ -215,7 +215,7 @@ export default function RoutingScreen({
         </div>
 
         {/* COLUMN 2: Routed to Local Back Office */}
-        <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col min-h-[500px]" id="col-eng-routing">
+        <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col" id="col-eng-routing">
           <div className="flex items-center justify-between mb-3 px-1 border-b border-slate-100 pb-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -226,9 +226,9 @@ export default function RoutingScreen({
             </span>
           </div>
 
-          <div className="flex-1 flex flex-col gap-3 overflow-y-auto" id="engineering-cards">
+          <div className="flex flex-col gap-3" id="engineering-cards">
             {engineeringQuotes.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
+              <div className="flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
                 <Building2 className="w-6 h-6 text-slate-300 mb-1.5" />
                 Local Back Office is empty. Complex items routed here.
               </div>
@@ -294,7 +294,7 @@ export default function RoutingScreen({
         </div>
 
         {/* COLUMN 3: Autonomous AI Agent Desk (New Column!) */}
-        <div className="bg-slate-50/50 border border-[#e1e6eb] rounded-lg p-3 flex flex-col min-h-[500px]" id="col-ai-agent-desk">
+        <div className="bg-slate-50/50 border border-[#e1e6eb] rounded-lg p-3 flex flex-col" id="col-ai-agent-desk">
           <div className="flex items-center justify-between mb-3 px-1 border-b border-slate-200 pb-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#004b93] animate-pulse"></span>
@@ -308,9 +308,9 @@ export default function RoutingScreen({
             </span>
           </div>
 
-          <div className="flex-1 flex flex-col gap-3 overflow-y-auto" id="ai-agent-cards">
+          <div className="flex flex-col gap-3" id="ai-agent-cards">
             {aiQuotes.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-white border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
+              <div className="flex flex-col items-center justify-center p-6 text-center bg-white border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
                 <Cpu className="w-6 h-6 text-slate-300 mb-1.5" />
                 No simple items routed to the AI Agent yet. Accept eligible items on the left.
               </div>
@@ -385,7 +385,7 @@ export default function RoutingScreen({
         </div>
 
         {/* COLUMN 4: Pune Hub */}
-        <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col min-h-[500px]" id="col-hub-routing">
+        <div className="bg-white border border-[#e1e6eb] rounded-lg p-3 flex flex-col" id="col-hub-routing">
           <div className="flex items-center justify-between mb-3 px-1 border-b border-slate-100 pb-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -396,9 +396,9 @@ export default function RoutingScreen({
             </span>
           </div>
 
-          <div className="flex-1 flex flex-col gap-3 overflow-y-auto" id="hub-cards">
+          <div className="flex flex-col gap-3" id="hub-cards">
             {hubQuotes.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
+              <div className="flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-md text-slate-400 text-xs">
                 <CheckCircle2 className="w-6 h-6 text-slate-300 mb-1.5" />
                 Pune Hub Queue is empty. Routed inquiries appear here.
               </div>

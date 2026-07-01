@@ -404,13 +404,13 @@ export default function QuoteScreen({
     <div className="flex flex-col gap-5" id="quote-screen-layout">
       {/* Top row: sidebar + document preview + copilot */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-      {/* SIDEBAR LIST (Col-span-3): Quick list of approved/completed quote requests */}
-      <div className="lg:col-span-3 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs lg:h-[650px] overflow-hidden" id="quote-sidebar">
+      {/* SIDEBAR LIST (Col-span-3) */}
+      <div className="lg:col-span-3 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs overflow-hidden" id="quote-sidebar">
         <div className="p-3.5 border-b border-[#e1e6eb] bg-slate-50">
           <h3 className="font-sans font-bold text-slate-900 text-[11px] uppercase tracking-wider">Hub Process Queue</h3>
           <p className="text-[10px] text-slate-500 font-medium">Ready for final dispatch</p>
         </div>
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-100 max-h-48 lg:max-h-none" id="quote-sidebar-list">
+        <div className="overflow-y-auto divide-y divide-slate-100 max-h-40 lg:max-h-64" id="quote-sidebar-list">
           {hubQuotes.map((quote) => {
             const isSelected = quote.id === selectedQuote.id;
             const isCompleted = quote.status === 'completed';
@@ -460,8 +460,8 @@ export default function QuoteScreen({
         </div>
       </div>
 
-      {/* DOCUMENT PREVIEW (Col-span-6): Interactive drafted files */}
-      <div className="lg:col-span-6 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs lg:h-[650px] overflow-hidden" id="document-preview-container">
+      {/* DOCUMENT PREVIEW (Col-span-6) */}
+      <div className="lg:col-span-6 flex flex-col bg-white border border-[#e1e6eb] rounded-lg shadow-2xs overflow-hidden" id="document-preview-container">
         
         {/* Tab Selection */}
         <div className="flex border-b border-[#e1e6eb] bg-slate-50 p-2 gap-2 shrink-0">
@@ -518,7 +518,7 @@ export default function QuoteScreen({
         </div>
 
         {/* Dynamic Frame Display */}
-        <div className="flex-1 overflow-y-auto p-4 bg-slate-50/30 flex flex-col justify-center" id="document-frame">
+        <div className="overflow-y-auto p-4 bg-slate-50/30" id="document-frame">
           {!isQuoteTriggered ? (
             (() => {
               const currentFlow = activeFlowMap[selectedQuote.id] || (selectedQuote.status === 'accepted_ai_agent' ? 'ai' : 'manual');
@@ -646,7 +646,7 @@ export default function QuoteScreen({
           ) : (
             <AnimatePresence mode="wait">
               {docTab === 'pdf' ? (
-                <div className="flex flex-col flex-1 overflow-hidden bg-slate-200" id="pdf-view-wrapper">
+                <div className="flex flex-col overflow-hidden bg-slate-200" id="pdf-view-wrapper">
                   {/* Page selector bar */}
                   <div className="flex items-center justify-between border-b border-[#e1e6eb] bg-slate-50 p-2 shrink-0 select-none">
                     <div className="flex items-center gap-1 overflow-x-auto py-0.5 flex-1 min-w-0">
@@ -702,7 +702,7 @@ export default function QuoteScreen({
                   </div>
 
                   {/* Scrollable canvas of pages */}
-                  <div className="flex-1 overflow-y-auto overflow-x-auto p-4 space-y-6 flex flex-col items-center" id="pdf-scrollable-pages" style={{ scrollBehavior: 'smooth' }}>
+                  <div className="overflow-y-auto overflow-x-auto p-4 space-y-6 flex flex-col items-center" id="pdf-scrollable-pages" style={{ scrollBehavior: 'smooth' }}>
                     {/* PAGE 1: COVER LETTER */}
                     {(pdfPage === 'all' || pdfPage === 1) && (() => {
                       const addr = getCustomerAddress(selectedQuote);
@@ -1002,8 +1002,8 @@ export default function QuoteScreen({
         </div>
       </div>
 
-      {/* AI CO-PILOT (Col-span-3): Chat assist panel */}
-      <div className="lg:col-span-3 flex flex-col bg-slate-50 border border-[#e1e6eb] rounded-lg shadow-2xs lg:h-[650px] overflow-hidden" id="copilot-container">
+      {/* AI CO-PILOT (Col-span-3) */}
+      <div className="lg:col-span-3 flex flex-col bg-slate-50 border border-[#e1e6eb] rounded-lg shadow-2xs overflow-hidden" id="copilot-container">
         {/* CoPilot Header */}
         <div className="p-3 border-b border-[#e1e6eb] bg-white flex items-center justify-between">
           <div className="flex items-center gap-1.5">
@@ -1146,7 +1146,7 @@ export default function QuoteScreen({
         </div>
 
         {/* Message Thread */}
-        <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2.5 bg-slate-50/20" id="copilot-messages">
+        <div className="overflow-y-auto p-3 flex flex-col gap-2.5 bg-slate-50/20 max-h-64" id="copilot-messages">
           {selectedQuote.pilotMessages?.map((msg, index) => {
             const isCopilot = msg.sender === 'copilot';
 
