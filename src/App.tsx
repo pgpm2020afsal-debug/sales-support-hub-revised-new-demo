@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShieldCheck, HelpCircle, AlertCircle, Sparkles, CheckSquare, RefreshCw, Bell, X, FileText, CheckCircle2, Lock, Play, Search, Menu } from 'lucide-react';
+import {
+  ShieldCheck,
+  HelpCircle,
+  AlertCircle,
+  Sparkles,
+  CheckSquare,
+  RefreshCw,
+  Bell,
+  X,
+  FileText,
+  CheckCircle2,
+  Lock,
+  Play,
+  Search,
+  Menu,
+} from 'lucide-react';
 import { INITIAL_QUOTES } from './data';
 import { QuoteInquiry } from './types';
 import IntakeScreen from './components/IntakeScreen';
@@ -35,7 +50,7 @@ export default function App() {
   const [dismissedBanners, setDismissedBanners] = useState<Set<string>>(new Set());
 
   const dismissBanner = (key: string) => {
-    setDismissedBanners((prev) => new Set([...prev, key]));
+    setDismissedBanners(prev => new Set([...prev, key]));
   };
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,7 +58,7 @@ export default function App() {
   const [showMenu, setShowMenu] = useState(false);
 
   // Global search filtering
-  const filteredQuotes = quotes.filter((q) => {
+  const filteredQuotes = quotes.filter(q => {
     const query = searchQuery.toLowerCase();
     return (
       q.id.toLowerCase().includes(query) ||
@@ -59,7 +74,11 @@ export default function App() {
   });
 
   const handleSearchResultClick = (q: QuoteInquiry) => {
-    if (q.status === 'unqualified' || q.status === 'clarification_draft' || q.status === 'awaiting_clarification') {
+    if (
+      q.status === 'unqualified' ||
+      q.status === 'clarification_draft' ||
+      q.status === 'awaiting_clarification'
+    ) {
       setActiveTab('intake');
       setSelectedIntakeId(q.id);
     } else if (q.status === 'qualified' || q.status === 'engineering_routed') {
@@ -81,16 +100,16 @@ export default function App() {
   // Helper to trigger alert notifications
   const triggerNotification = (text: string, type: 'success' | 'info' | 'warning' = 'info') => {
     const newId = Date.now().toString();
-    setNotifications((prev) => [...prev, { id: newId, text, type }]);
-    
+    setNotifications(prev => [...prev, { id: newId, text, type }]);
+
     // Auto-dismiss after 5 seconds
     setTimeout(() => {
-      setNotifications((prev) => prev.filter((n) => n.id !== newId));
+      setNotifications(prev => prev.filter(n => n.id !== newId));
     }, 5000);
   };
 
   const removeNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
   // Reset the demo to starting conditions
@@ -104,22 +123,23 @@ export default function App() {
 
   // HANDLER: Qualify Complete in Stage 1
   const handleQualifyComplete = (id: string, partNo: string, serialNo: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return {
             ...q,
             status: 'qualified',
             partNumberCorrected: partNo,
             serialNumberCorrected: serialNo,
-            notes: 'Human-qualified & routed to SFDC for Opportunity creation. Ready for Complexity Routing.',
+            notes:
+              'Human-qualified & routed to SFDC for Opportunity creation. Ready for Complexity Routing.',
           };
         }
         return q;
       })
     );
 
-    const targetQuote = quotes.find((q) => q.id === id);
+    const targetQuote = quotes.find(q => q.id === id);
     triggerNotification(
       `🎉 Verified ${targetQuote?.customerName}'s inquiry. SFDC Opportunity Created & parameters synced to Sales Cloud pipeline!`,
       'success'
@@ -127,7 +147,7 @@ export default function App() {
 
     // Auto-select another unqualified item if exists
     const remainingUnqualified = quotes.filter(
-      (q) => q.id !== id && (q.status === 'unqualified' || q.status === 'clarification_draft')
+      q => q.id !== id && (q.status === 'unqualified' || q.status === 'clarification_draft')
     );
     if (remainingUnqualified.length > 0) {
       setSelectedIntakeId(remainingUnqualified[0].id);
@@ -135,32 +155,43 @@ export default function App() {
 
     // Give a beautiful suggestion to move to Tab 2
     setTimeout(() => {
-      triggerNotification('💡 Inflow qualified! Switch to Tab 2: Complexity Routing to dispatch it.', 'info');
+      triggerNotification(
+        '💡 Inflow qualified! Switch to Tab 2: Complexity Routing to dispatch it.',
+        'info'
+      );
     }, 1500);
   };
 
   // HANDLER: Log as Informational Request (RFI) in Stage 1
   const handleLogAsRfi = (id: string, emailText: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return {
             ...q,
             status: 'completed',
             draftEmailText: emailText,
-            notes: 'Resolved as RFI (Request for Information). Email response sent & logged in SFDC as informational (Closed - No active Opportunity).',
+            notes:
+              'Resolved as RFI (Request for Information). Email response sent & logged in SFDC as informational (Closed - No active Opportunity).',
           };
         }
         return q;
       })
     );
 
-    const targetQuote = quotes.find((q) => q.id === id);
-    triggerNotification(`ℹ️ Logged RFI for ${targetQuote?.customerName} in SFDC (Informational). Sent response email.`, 'success');
+    const targetQuote = quotes.find(q => q.id === id);
+    triggerNotification(
+      `ℹ️ Logged RFI for ${targetQuote?.customerName} in SFDC (Informational). Sent response email.`,
+      'success'
+    );
 
     // Auto-select another unqualified item if exists
     const remainingUnqualified = quotes.filter(
-      (q) => q.id !== id && (q.status === 'unqualified' || q.status === 'clarification_draft' || q.status === 'awaiting_clarification')
+      q =>
+        q.id !== id &&
+        (q.status === 'unqualified' ||
+          q.status === 'clarification_draft' ||
+          q.status === 'awaiting_clarification')
     );
     if (remainingUnqualified.length > 0) {
       setSelectedIntakeId(remainingUnqualified[0].id);
@@ -169,8 +200,8 @@ export default function App() {
 
   // HANDLER: Send Clarification Request in Stage 1
   const handleSendClarification = (id: string, emailText: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return {
             ...q,
@@ -183,14 +214,17 @@ export default function App() {
       })
     );
 
-    const targetQuote = quotes.find((q) => q.id === id);
-    triggerNotification(`✉️ Clarification request transmitted to ${targetQuote?.customerName}. Status updated.`, 'info');
+    const targetQuote = quotes.find(q => q.id === id);
+    triggerNotification(
+      `✉️ Clarification request transmitted to ${targetQuote?.customerName}. Status updated.`,
+      'info'
+    );
   };
 
   // HANDLER: Route to Local Engineering in Stage 2
   const handleRouteEngineering = (id: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return {
             ...q,
@@ -206,8 +240,8 @@ export default function App() {
 
   // HANDLER: Accept into Hub Queue in Stage 2
   const handleAcceptHub = (id: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return {
             ...q,
@@ -220,18 +254,24 @@ export default function App() {
     );
 
     setSelectedQuoteId(id);
-    triggerNotification('🚀 Approved for Hub processing. Item is now active in Tab 3: Quote Desk.', 'success');
+    triggerNotification(
+      '🚀 Approved for Hub processing. Item is now active in Tab 3: Quote Desk.',
+      'success'
+    );
 
     // Suggest switching to Tab 3
     setTimeout(() => {
-      triggerNotification('💡 Card dispatched! Navigate to Tab 3: Quote Generation to customize and send.', 'info');
+      triggerNotification(
+        '💡 Card dispatched! Navigate to Tab 3: Quote Generation to customize and send.',
+        'info'
+      );
     }, 1200);
   };
 
   // HANDLER: Route to Autonomous AI Desk in Stage 2
   const handleAcceptAiAgent = (id: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return {
             ...q,
@@ -244,23 +284,32 @@ export default function App() {
     );
 
     setSelectedQuoteId(id);
-    triggerNotification('🤖 Routed to Autonomous AI Desk. AI Agent is compiling parts and drafts...', 'info');
+    triggerNotification(
+      '🤖 Routed to Autonomous AI Desk. AI Agent is compiling parts and drafts...',
+      'info'
+    );
 
     // Simulate autonomous completion notification
     setTimeout(() => {
-      triggerNotification('✓ AI Agent auto-compiled the SAP CPQ quote and finalized the customer draft! Ready for review.', 'success');
+      triggerNotification(
+        '✓ AI Agent auto-compiled the SAP CPQ quote and finalized the customer draft! Ready for review.',
+        'success'
+      );
     }, 2000);
 
     // Suggest switching to Tab 3
     setTimeout(() => {
-      triggerNotification('💡 Auto-quote compiled! Navigate to Tab 3: Quote Generation to send.', 'info');
+      triggerNotification(
+        '💡 Auto-quote compiled! Navigate to Tab 3: Quote Generation to send.',
+        'info'
+      );
     }, 3200);
   };
 
   // HANDLER: Reset status (useful for moving cards back on Kanban)
   const handleResetStatus = (id: string, status: QuoteInquiry['status']) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return { ...q, status };
         }
@@ -272,8 +321,8 @@ export default function App() {
 
   // HANDLER: Update quote parameters (price, discount, shipping, messages) in Stage 3
   const handleUpdateQuoteDetails = (id: string, updates: Partial<QuoteInquiry>) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return { ...q, ...updates };
         }
@@ -284,8 +333,8 @@ export default function App() {
 
   // HANDLER: Final Approve & Send to Customer
   const handleApproveAndSend = (id: string) => {
-    setQuotes((prev) =>
-      prev.map((q) => {
+    setQuotes(prev =>
+      prev.map(q => {
         if (q.id === id) {
           return { ...q, status: 'completed' };
         }
@@ -298,22 +347,32 @@ export default function App() {
 
   // Tab counters for badge display
   const countIntake = quotes.filter(
-    (q) => q.status === 'unqualified' || q.status === 'clarification_draft' || q.status === 'awaiting_clarification'
+    q =>
+      q.status === 'unqualified' ||
+      q.status === 'clarification_draft' ||
+      q.status === 'awaiting_clarification'
   ).length;
-  
-  const countRouting = quotes.filter((q) => q.status === 'qualified').length;
-  
-  const countQuote = quotes.filter((q) => q.status === 'accepted_hub' || q.status === 'accepted_ai_agent').length;
 
-  const activeModalQuote = quotes.find((q) => q.id === showSuccessModal);
+  const countRouting = quotes.filter(q => q.status === 'qualified').length;
+
+  const countQuote = quotes.filter(
+    q => q.status === 'accepted_hub' || q.status === 'accepted_ai_agent'
+  ).length;
+
+  const activeModalQuote = quotes.find(q => q.id === showSuccessModal);
 
   return (
-    <div className="min-h-screen bg-[#eff3f6] text-[#1e293b] font-sans flex flex-col overflow-x-hidden" id="app-workspace">
-      
+    <div
+      className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(0,75,147,0.16),_transparent_30%),linear-gradient(135deg,_#f6f9fc_0%,_#eef4f9_50%,_#f9fcff_100%)] text-slate-800 font-sans flex flex-col overflow-x-hidden"
+      id="app-workspace"
+    >
       {/* GLOBAL TOAST STACK */}
-      <div className="fixed top-4 right-2 sm:right-4 z-50 flex flex-col gap-2 w-[calc(100vw-1rem)] sm:max-w-sm" id="notification-toasts">
+      <div
+        className="fixed top-4 right-2 sm:right-4 z-50 flex flex-col gap-2 w-[calc(100vw-1rem)] sm:max-w-sm"
+        id="notification-toasts"
+      >
         <AnimatePresence>
-          {notifications.map((notif) => (
+          {notifications.map(notif => (
             <motion.div
               key={notif.id}
               initial={{ opacity: 0, x: 50, scale: 0.9 }}
@@ -336,9 +395,7 @@ export default function App() {
                   <Bell className="w-5 h-5 text-[#004b93]" />
                 )}
               </div>
-              <div className="flex-1 text-xs font-semibold leading-relaxed">
-                {notif.text}
-              </div>
+              <div className="flex-1 text-xs font-semibold leading-relaxed">{notif.text}</div>
               <button
                 onClick={() => removeNotification(notif.id)}
                 className="text-slate-400 hover:text-slate-600 shrink-0"
@@ -352,18 +409,34 @@ export default function App() {
 
       <div>
         {/* APP HEADER */}
-        <header className="bg-white border-b border-[#e1e6eb] px-3 sm:px-6 sticky top-0 z-40 shadow-xs" id="global-header">
-          <div className="max-w-7xl mx-auto flex items-center justify-between h-14 min-w-0">
-            
+        <header
+          className="border-b border-slate-200/70 bg-white/80 backdrop-blur-xl px-3 sm:px-6 sticky top-0 z-40 shadow-[0_10px_35px_rgba(15,23,42,0.06)]"
+          id="global-header"
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between h-16 min-w-0 gap-4">
             {/* Logo and Nav Menu */}
-            <div className="flex items-center gap-4 sm:gap-10 min-w-0">
-              <span className="font-sans font-extrabold tracking-wider text-[#004b93] text-xl select-none">SULZER</span>
-              
-              <nav className="hidden md:flex items-stretch h-14">
+            <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+              <div className="flex items-center gap-2.5 rounded-full border border-[#004b93]/10 bg-[#004b93]/5 px-3 py-1.5 shadow-sm">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#004b93] text-sm font-black text-white">
+                  S
+                </div>
+                <div className="min-w-0">
+                  <div className="font-sans font-black tracking-[0.24em] text-[#004b93] text-[11px] uppercase">
+                    Sulzer
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate">
+                    Sales Support Hub
+                  </div>
+                </div>
+              </div>
+
+              <nav className="hidden md:flex items-stretch h-16 gap-2">
                 <button
                   onClick={() => setActiveTab('intake')}
-                  className={`px-4 h-full text-xs font-semibold transition-all relative flex items-center gap-1.5 ${
-                    activeTab === 'intake' ? 'text-[#004b93]' : 'text-slate-600 hover:text-[#004b93]'
+                  className={`px-4 h-10 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                    activeTab === 'intake'
+                      ? 'bg-[#004b93] text-white shadow-lg shadow-[#004b93]/20'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-[#004b93]'
                   }`}
                   id="tab-nav-intake"
                 >
@@ -377,11 +450,13 @@ export default function App() {
                     <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#004b93]" />
                   )}
                 </button>
-                
+
                 <button
                   onClick={() => setActiveTab('routing')}
-                  className={`px-4 h-full text-xs font-semibold transition-all relative flex items-center gap-1.5 ${
-                    activeTab === 'routing' ? 'text-[#004b93]' : 'text-slate-600 hover:text-[#004b93]'
+                  className={`px-4 h-10 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                    activeTab === 'routing'
+                      ? 'bg-[#004b93] text-white shadow-lg shadow-[#004b93]/20'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-[#004b93]'
                   }`}
                   id="tab-nav-routing"
                 >
@@ -398,8 +473,10 @@ export default function App() {
 
                 <button
                   onClick={() => setActiveTab('quote')}
-                  className={`px-4 h-full text-xs font-semibold transition-all relative flex items-center gap-1.5 ${
-                    activeTab === 'quote' ? 'text-[#004b93]' : 'text-slate-600 hover:text-[#004b93]'
+                  className={`px-4 h-10 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                    activeTab === 'quote'
+                      ? 'bg-[#004b93] text-white shadow-lg shadow-[#004b93]/20'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-[#004b93]'
                   }`}
                   id="tab-nav-quote"
                 >
@@ -418,6 +495,10 @@ export default function App() {
 
             {/* Right Header items matching Sulzer screenshot */}
             <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+              <div className="hidden sm:flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-600">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                Live operations
+              </div>
               <div className="flex items-center gap-2 sm:gap-3">
                 {/* Global Search Container */}
                 <div className="relative flex items-center" id="global-search-container">
@@ -425,7 +506,7 @@ export default function App() {
                     type="text"
                     placeholder="Search..."
                     value={searchQuery}
-                    onChange={(e) => {
+                    onChange={e => {
                       setSearchQuery(e.target.value);
                       setShowSearchResults(e.target.value.length > 0);
                     }}
@@ -451,26 +532,29 @@ export default function App() {
 
                   {/* Search Results Dropdown Overlay */}
                   {showSearchResults && (
-                    <div 
-                      className="absolute top-full mt-2 right-0 w-80 bg-white border border-[#e1e6eb] rounded-lg shadow-xl z-50 p-2 overflow-hidden flex flex-col max-h-96" 
+                    <div
+                      className="absolute top-full mt-2 right-0 w-80 bg-white border border-[#e1e6eb] rounded-lg shadow-xl z-50 p-2 overflow-hidden flex flex-col max-h-96"
                       id="search-results-dropdown"
                     >
                       <div className="px-2 py-1.5 border-b border-slate-100 text-[9px] font-bold text-slate-400 uppercase tracking-wider flex justify-between items-center">
                         <span>Matching Inquiries ({filteredQuotes.length})</span>
-                        <button 
-                          onClick={() => setShowSearchResults(false)} 
+                        <button
+                          onClick={() => setShowSearchResults(false)}
                           className="text-slate-400 hover:text-slate-600"
                         >
                           <X className="w-3 h-3" />
                         </button>
                       </div>
-                      <div className="overflow-y-auto divide-y divide-slate-100 flex-1 max-h-80" id="search-results-list">
+                      <div
+                        className="overflow-y-auto divide-y divide-slate-100 flex-1 max-h-80"
+                        id="search-results-list"
+                      >
                         {filteredQuotes.length === 0 ? (
                           <div className="p-4 text-center text-xs text-slate-400 font-medium">
                             No matches found for "{searchQuery}"
                           </div>
                         ) : (
-                          filteredQuotes.map((q) => (
+                          filteredQuotes.map(q => (
                             <button
                               key={q.id}
                               onClick={() => handleSearchResultClick(q)}
@@ -478,27 +562,39 @@ export default function App() {
                               id={`search-result-item-${q.id}`}
                             >
                               <div className="flex justify-between items-center">
-                                <span className="font-mono text-[9px] font-bold text-[#004b93]">{q.id}</span>
-                                <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${
-                                  q.status === 'completed'
-                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                                    : q.status === 'qualified'
-                                    ? 'bg-amber-50 text-amber-700 border-amber-100'
-                                    : q.status === 'accepted_hub'
-                                    ? 'bg-[#004b93]/5 text-[#004b93] border-[#004b93]/10'
-                                    : q.status === 'engineering_routed'
-                                    ? 'bg-amber-50 text-amber-800 border-amber-200'
-                                    : 'bg-slate-50 text-slate-500 border-slate-200'
-                                }`}>
+                                <span className="font-mono text-[9px] font-bold text-[#004b93]">
+                                  {q.id}
+                                </span>
+                                <span
+                                  className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${
+                                    q.status === 'completed'
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                      : q.status === 'qualified'
+                                      ? 'bg-amber-50 text-amber-700 border-amber-100'
+                                      : q.status === 'accepted_hub'
+                                      ? 'bg-[#004b93]/5 text-[#004b93] border-[#004b93]/10'
+                                      : q.status === 'engineering_routed'
+                                      ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                      : 'bg-slate-50 text-slate-500 border-slate-200'
+                                  }`}
+                                >
                                   {q.status.replace('_', ' ').toUpperCase()}
                                 </span>
                               </div>
-                              <div className="font-bold text-xs text-slate-800 truncate">{q.customerName}</div>
-                              <div className="text-[10px] text-slate-500 truncate font-medium">{q.subject}</div>
+                              <div className="font-bold text-xs text-slate-800 truncate">
+                                {q.customerName}
+                              </div>
+                              <div className="text-[10px] text-slate-500 truncate font-medium">
+                                {q.subject}
+                              </div>
                               {(q.partNumberCorrected || q.serialNumberCorrected) && (
                                 <div className="text-[9px] font-mono text-slate-600 bg-slate-50 px-1.5 py-0.5 rounded mt-0.5 flex gap-2">
-                                  {q.partNumberCorrected && <span>PN: {q.partNumberCorrected}</span>}
-                                  {q.serialNumberCorrected && <span>SN: {q.serialNumberCorrected}</span>}
+                                  {q.partNumberCorrected && (
+                                    <span>PN: {q.partNumberCorrected}</span>
+                                  )}
+                                  {q.serialNumberCorrected && (
+                                    <span>SN: {q.serialNumberCorrected}</span>
+                                  )}
                                 </div>
                               )}
                             </button>
@@ -542,7 +638,6 @@ export default function App() {
                 </button>
               </div>
             </div>
-
           </div>
         </header>
 
@@ -589,7 +684,11 @@ export default function App() {
                 <div className="flex items-center gap-2 leading-tight">
                   <span className="text-amber-500">⚠️</span>
                   <span>
-                    <strong>{countIntake} {countIntake === 1 ? 'inquiry' : 'inquiries'} pending qualification.</strong> Verify opportunity fields manually before converting it into an opportunity.
+                    <strong>
+                      {countIntake} {countIntake === 1 ? 'inquiry' : 'inquiries'} pending
+                      qualification.
+                    </strong>{' '}
+                    Verify opportunity fields manually before converting it into an opportunity.
                   </span>
                 </div>
                 <button
@@ -603,30 +702,37 @@ export default function App() {
           )}
 
           {/* ROUTING TAB: qualified items waiting to be dispatched */}
-          {activeTab === 'routing' && countRouting > 0 && !dismissedBanners.has('routing-pending') && (
-            <motion.div
-              key="banner-routing"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="bg-amber-50 border-b border-amber-200 text-amber-900 overflow-hidden"
-            >
-              <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
-                <div className="flex items-center gap-2 leading-tight">
-                  <span className="text-amber-500">⚠️</span>
-                  <span>
-                    <strong>{countRouting} qualified {countRouting === 1 ? 'item' : 'items'} awaiting dispatch.</strong> Route Complex items to <strong>Local Back Office</strong> or <strong>Pune Hub</strong>, and Simple items to the AI Agent.
-                  </span>
+          {activeTab === 'routing' &&
+            countRouting > 0 &&
+            !dismissedBanners.has('routing-pending') && (
+              <motion.div
+                key="banner-routing"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="bg-amber-50 border-b border-amber-200 text-amber-900 overflow-hidden"
+              >
+                <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
+                  <div className="flex items-center gap-2 leading-tight">
+                    <span className="text-amber-500">⚠️</span>
+                    <span>
+                      <strong>
+                        {countRouting} qualified {countRouting === 1 ? 'item' : 'items'} awaiting
+                        dispatch.
+                      </strong>{' '}
+                      Route Complex items to <strong>Local Back Office</strong> or{' '}
+                      <strong>Pune Hub</strong>, and Simple items to the AI Agent.
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => dismissBanner('routing-pending')}
+                    className="text-amber-700 hover:text-amber-900 font-bold text-[10px] uppercase transition-colors shrink-0"
+                  >
+                    Dismiss
+                  </button>
                 </div>
-                <button
-                  onClick={() => dismissBanner('routing-pending')}
-                  className="text-amber-700 hover:text-amber-900 font-bold text-[10px] uppercase transition-colors shrink-0"
-                >
-                  Dismiss
-                </button>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
 
           {/* QUOTE TAB: items ready to send */}
           {activeTab === 'quote' && countQuote > 0 && !dismissedBanners.has('quote-pending') && (
@@ -641,7 +747,11 @@ export default function App() {
                 <div className="flex items-center gap-2 leading-tight">
                   <span>💡</span>
                   <span>
-                    <strong>{countQuote} {countQuote === 1 ? 'quote' : 'quotes'} ready for final review.</strong> Trigger SAP CPQ compilation, review the PDF, then Approve & Send to dispatch to customer.
+                    <strong>
+                      {countQuote} {countQuote === 1 ? 'quote' : 'quotes'} ready for final review.
+                    </strong>{' '}
+                    Trigger SAP CPQ compilation, review the PDF, then Approve & Send to dispatch to
+                    customer.
                   </span>
                 </div>
                 <button
@@ -666,7 +776,10 @@ export default function App() {
               <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-xs font-medium">
                 <div className="flex items-center gap-2">
                   <span>✅</span>
-                  <span><strong>Intake queue is clear.</strong> All inquiries have been qualified or resolved.</span>
+                  <span>
+                    <strong>Intake queue is clear.</strong> All inquiries have been qualified or
+                    resolved.
+                  </span>
                 </div>
                 <button
                   onClick={() => dismissBanner('intake-clear')}
@@ -681,6 +794,7 @@ export default function App() {
 
         {/* MAIN STAGE CANVAS */}
         <main className="max-w-7xl mx-auto w-full p-3 sm:p-6">
+          <div className="rounded-[28px] border border-slate-200/80 bg-white/80 p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:p-4">
           <AnimatePresence mode="wait">
             {activeTab === 'intake' && (
               <motion.div
@@ -715,7 +829,7 @@ export default function App() {
                   onAcceptHub={handleAcceptHub}
                   onAcceptAiAgent={handleAcceptAiAgent}
                   onResetStatus={handleResetStatus}
-                  onGoToQuote={(id) => {
+                  onGoToQuote={id => {
                     setSelectedQuoteId(id);
                     setActiveTab('quote');
                   }}
@@ -742,14 +856,21 @@ export default function App() {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
         </main>
       </div>
 
       {/* FOOTER METRICS */}
-      <footer className="bg-white border-t border-slate-200 mt-8 py-5 px-4 sm:px-6" id="global-footer">
+      <footer
+        className="mt-8 border-t border-slate-200/80 bg-white/70 py-5 px-4 backdrop-blur-sm sm:px-6"
+        id="global-footer"
+      >
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
           <div>
-            <span>Sales Support Hub Platform © 2026. Enforcing <strong>100% human-verified qualification protocol</strong>.</span>
+            <span>
+              Sales Support Hub Platform © 2026. Enforcing{' '}
+              <strong>100% human-verified qualification protocol</strong>.
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
@@ -767,7 +888,10 @@ export default function App() {
       {/* SUCCESS TRANSITION MODAL (CONGRATULATIONS / PDF ARCHIVED) */}
       <AnimatePresence>
         {showSuccessModal && activeModalQuote && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm" id="success-modal">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
+            id="success-modal"
+          >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -776,34 +900,49 @@ export default function App() {
             >
               {/* Top abstract graphic bar */}
               <div className="absolute top-0 left-0 right-0 h-2 bg-emerald-600" />
-              
+
               <div className="flex flex-col items-center text-center mt-3">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4 shadow-inner">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                
-                <h3 className="font-display font-extrabold text-slate-900 text-xl">Quotation Dispatched</h3>
+
+                <h3 className="font-display font-extrabold text-slate-900 text-xl">
+                  Quotation Dispatched
+                </h3>
                 <p className="text-slate-500 text-xs mt-1.5 px-2">
-                  Document <strong className="font-mono text-slate-800">{activeModalQuote.quoteNumber}</strong> has been qualified, digitally signed, and transmitted to customer.
+                  Document{' '}
+                  <strong className="font-mono text-slate-800">
+                    {activeModalQuote.quoteNumber}
+                  </strong>{' '}
+                  has been qualified, digitally signed, and transmitted to customer.
                 </p>
 
                 {/* Tracking simulation block */}
                 <div className="w-full bg-slate-50 rounded-lg p-4 border border-slate-100 text-left my-5 flex flex-col gap-2.5 text-xs">
-                  <div className="font-bold text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">SAP CPQ Audit Trail Ledger</div>
-                  
+                  <div className="font-bold text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">
+                    SAP CPQ Audit Trail Ledger
+                  </div>
+
                   <div className="flex justify-between font-mono">
                     <span className="text-slate-500">Client Recipient:</span>
-                    <span className="font-semibold text-slate-800 truncate max-w-[180px]">{activeModalQuote.customerName}</span>
+                    <span className="font-semibold text-slate-800 truncate max-w-[180px]">
+                      {activeModalQuote.customerName}
+                    </span>
                   </div>
-                  
+
                   <div className="flex justify-between font-mono">
                     <span className="text-slate-500">Document Ref:</span>
-                    <span className="font-semibold text-slate-800">{activeModalQuote.quoteNumber}</span>
+                    <span className="font-semibold text-slate-800">
+                      {activeModalQuote.quoteNumber}
+                    </span>
                   </div>
 
                   <div className="flex justify-between font-mono">
                     <span className="text-slate-500">Part/Serial Specs:</span>
-                    <span className="font-semibold text-slate-800">{activeModalQuote.partNumberCorrected} / {activeModalQuote.serialNumberCorrected}</span>
+                    <span className="font-semibold text-slate-800">
+                      {activeModalQuote.partNumberCorrected} /{' '}
+                      {activeModalQuote.serialNumberCorrected}
+                    </span>
                   </div>
 
                   <div className="flex justify-between font-mono border-t border-slate-200/60 pt-2.5">
@@ -887,7 +1026,10 @@ export default function App() {
                     Human-in-the-Loop Protocol
                   </h3>
                   <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
-                    Sulzer mandates 100% human-verified qualification. AI extraction automates 80% of routine ingestion, but a human must confirm critical metallurgical tolerances, casing dimensions, and dynamic stress ratings before any quotation is legally dispatched.
+                    Sulzer mandates 100% human-verified qualification. AI extraction automates 80%
+                    of routine ingestion, but a human must confirm critical metallurgical
+                    tolerances, casing dimensions, and dynamic stress ratings before any quotation
+                    is legally dispatched.
                   </p>
                 </div>
 
@@ -898,7 +1040,9 @@ export default function App() {
                     SAP CPQ Integration Engine
                   </h3>
                   <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
-                    Once a quote is qualified and dispatched from Stage 2, spare parts line items are pushed to the gateway cache. Our integration calculates contract-specific bulk discounts, real-time inventory status, and standard freight lead times.
+                    Once a quote is qualified and dispatched from Stage 2, spare parts line items
+                    are pushed to the gateway cache. Our integration calculates contract-specific
+                    bulk discounts, real-time inventory status, and standard freight lead times.
                   </p>
                 </div>
 
@@ -909,7 +1053,11 @@ export default function App() {
                     Complex Cases & Special Engineering
                   </h3>
                   <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
-                    For complex project packages (such as large-scale centrifugal slurry pumps or resized impellers), route the inquiry to the <strong>Local Back office Engineering</strong>. Specialist reviews handle induction case hardening, material safety datasheets, and custom dynamic balancing calculations.
+                    For complex project packages (such as large-scale centrifugal slurry pumps or
+                    resized impellers), route the inquiry to the{' '}
+                    <strong>Local Back office Engineering</strong>. Specialist reviews handle
+                    induction case hardening, material safety datasheets, and custom dynamic
+                    balancing calculations.
                   </p>
                 </div>
 

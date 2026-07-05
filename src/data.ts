@@ -50,10 +50,11 @@ Ph: 01483 917702 | www: www.pdasgoup.co.uk`,
     aiConfidence: 96,
     suggestedComplexity: 'Simple',
     finalComplexity: '',
-    notes: 'Direct match found in Sulzer parts master catalogue for FP80C Hydraulic Refurbishment Kit.',
+    notes:
+      'Direct match found in Sulzer parts master catalogue for FP80C Hydraulic Refurbishment Kit.',
     quoteNumber: 'QT-2026-8910',
-    price: 1850.00,
-    shippingCost: 150.00,
+    price: 1850.0,
+    shippingCost: 150.0,
     leadTime: 3,
     discount: 0,
     draftEmailText: `Dear Dylan Bell,
@@ -74,9 +75,9 @@ Sales Support Hub`,
       {
         sender: 'copilot',
         text: 'Hello! I have pre-calculated the quote for Dylan Bell. His inquiry is for the FP80C-CB1.3 kit. Based on PDAS Group contract rules, they are eligible for a 10% volume discount if they order both kits. Would you like to suggest this?',
-        timestamp: '10:30 AM'
-      }
-    ]
+        timestamp: '10:30 AM',
+      },
+    ],
   },
   {
     id: 'REQ-2026-002',
@@ -117,10 +118,11 @@ Midland Water Utilities`,
     aiConfidence: 35,
     suggestedComplexity: 'Complex',
     finalComplexity: '',
-    notes: 'Missing direct text references for part/serial numbers. High resolution data plate image is attached below; human review required to extract parameters.',
+    notes:
+      'Missing direct text references for part/serial numbers. High resolution data plate image is attached below; human review required to extract parameters.',
     quoteNumber: 'QT-2026-8911',
-    price: 2450.00,
-    shippingCost: 220.00,
+    price: 2450.0,
+    shippingCost: 220.0,
     leadTime: 10,
     discount: 0,
     draftEmailText: `Dear Oliver Yates,
@@ -143,16 +145,16 @@ Sales Support Hub`,
       {
         sender: 'copilot',
         text: 'The text contains no part numbers, but there is a clear data plate image attached. Please click "Review Attachment" to read the plate and enter the model (XFP-80C) and Serial Number (301009204) manually.',
-        timestamp: '11:00 AM'
-      }
+        timestamp: '11:00 AM',
+      },
     ],
     attachments: [
       {
         name: 'sulzer_data_plate_XFP80.jpg',
         type: 'image/jpeg',
-        size: '1.4 MB'
-      }
-    ]
+        size: '1.4 MB',
+      },
+    ],
   },
   {
     id: 'REQ-2026-003',
@@ -197,10 +199,11 @@ Procurement Office | Petro-Brasil SA`,
     aiConfidence: 99,
     suggestedComplexity: 'Simple',
     finalComplexity: 'Simple',
-    notes: 'High historical match. Standard non-hazardous rubberized gasket seals with stock level: 45 units available.',
+    notes:
+      'High historical match. Standard non-hazardous rubberized gasket seals with stock level: 45 units available.',
     quoteNumber: 'QT-2026-8908',
-    price: 360.00,
-    shippingCost: 80.00,
+    price: 360.0,
+    shippingCost: 80.0,
     leadTime: 5,
     discount: 0,
     draftEmailText: `Dear Roberto Silva,
@@ -221,9 +224,9 @@ Sales Support Hub`,
       {
         sender: 'copilot',
         text: 'This customer requested 12 units. Since stock is high (45 units), standard routing should put this directly in Simple Hub Queue. Would you like to proceed?',
-        timestamp: '09:00 AM'
-      }
-    ]
+        timestamp: '09:00 AM',
+      },
+    ],
   },
   {
     id: 'REQ-2026-004',
@@ -270,10 +273,11 @@ Leeds Water Treatment Operations`,
     aiConfidence: 94,
     suggestedComplexity: 'Simple',
     finalComplexity: '',
-    notes: 'Direct system match for ABS XFP-100G Hydraulic Wear Kit. Stock status available at Leeds local hub.',
+    notes:
+      'Direct system match for ABS XFP-100G Hydraulic Wear Kit. Stock status available at Leeds local hub.',
     quoteNumber: 'QT-2026-8912',
-    price: 2150.00,
-    shippingCost: 110.00,
+    price: 2150.0,
+    shippingCost: 110.0,
     leadTime: 4,
     discount: 0,
     draftEmailText: `Dear Liam Henderson,
@@ -294,9 +298,9 @@ Sales Support Hub`,
       {
         sender: 'copilot',
         text: 'The parts match Leeds hub inventory. I recommend qualifying this item so we can generate the quote quickly.',
-        timestamp: '11:15 AM'
-      }
-    ]
+        timestamp: '11:15 AM',
+      },
+    ],
   },
   {
     id: 'REQ-2026-005',
@@ -345,8 +349,8 @@ Operations Engineer | Detroit Municipal Water`,
     finalComplexity: '',
     notes: 'Flagged as complex due to impeller dia changes',
     quoteNumber: 'QT-2026-8907',
-    price: 3850.00,
-    shippingCost: 250.00,
+    price: 3850.0,
+    shippingCost: 250.0,
     leadTime: 12,
     discount: 5,
     draftEmailText: `Dear David Miller,
@@ -367,19 +371,19 @@ Sales Support Hub`,
       {
         sender: 'copilot',
         text: 'Hello David! I see Detroit Municipal Water requested custom impeller diameter modifications. I have automatically added $450 dynamic balancing and custom machining surcharge to the standard price. Standard shipping is selected. Should I add a custom expedited shipping surcharge?',
-        timestamp: '10:45 AM'
+        timestamp: '10:45 AM',
       },
       {
         sender: 'user',
         text: 'Keep shipping as standard freight, but apply their 5% global contract discount.',
-        timestamp: '10:48 AM'
+        timestamp: '10:48 AM',
       },
       {
         sender: 'copilot',
         text: 'Got it. I have applied the 5% contract discount ($192.50 discount value) and kept standard freight shipping at $250.00. The total is recalculated to $3,907.50. Let me know if you would like to finalize the quote!',
-        timestamp: '10:49 AM'
-      }
-    ]
+        timestamp: '10:49 AM',
+      },
+    ],
   },
   {
     id: 'REQ-2026-006',
@@ -445,10 +449,11 @@ Thanks in advance for your kind support.`,
     aiConfidence: 98,
     suggestedComplexity: 'Complex',
     finalComplexity: '',
-    notes: 'Very complex EPC Tender request from tkUIPL for Hindustan Zinc Slurry Pumps. Involves design/engineering of Non-API centrifugal slurry pumps with strict deviation and qualification schedules.',
+    notes:
+      'Very complex EPC Tender request from tkUIPL for Hindustan Zinc Slurry Pumps. Involves design/engineering of Non-API centrifugal slurry pumps with strict deviation and qualification schedules.',
     quoteNumber: 'QT-2026-8913',
-    price: 185000.00,
-    shippingCost: 7500.00,
+    price: 185000.0,
+    shippingCost: 7500.0,
     leadTime: 45,
     discount: 0,
     draftEmailText: `Dear Milind Salunkhe,
@@ -469,8 +474,8 @@ Sulzer Pumps Proposal Division`,
       {
         sender: 'copilot',
         text: 'This is an extremely complex high-value EPC tender for a major chemical/mineral processing facility. Our AI model suggests routing this package directly to our Local Back office engineering division for complete custom pump rating selection and hydraulic simulation calculations.',
-        timestamp: '11:45 AM'
-      }
-    ]
-  }
+        timestamp: '11:45 AM',
+      },
+    ],
+  },
 ];

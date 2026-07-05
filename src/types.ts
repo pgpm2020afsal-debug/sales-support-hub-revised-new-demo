@@ -15,7 +15,15 @@ export interface QuoteInquiry {
   partNumberCorrected: string;
   serialNumberExtracted: string;
   serialNumberCorrected: string;
-  status: 'unqualified' | 'clarification_draft' | 'awaiting_clarification' | 'qualified' | 'engineering_routed' | 'accepted_hub' | 'accepted_ai_agent' | 'completed';
+  status:
+    | 'unqualified'
+    | 'clarification_draft'
+    | 'awaiting_clarification'
+    | 'qualified'
+    | 'engineering_routed'
+    | 'accepted_hub'
+    | 'accepted_ai_agent'
+    | 'completed';
   aiConfidence: number; // 0-100
   suggestedComplexity: 'Simple' | 'Complex';
   finalComplexity: 'Simple' | 'Complex' | '';
@@ -38,7 +46,13 @@ export interface QuoteInquiry {
     offerType: string;
     contactName: string;
     contactTitle: string;
-    stage: 'Prospecting' | 'Qualification' | 'Proposal' | 'Bid Negotiation' | 'Closed Won' | 'Closed Lost';
+    stage:
+      | 'Prospecting'
+      | 'Qualification'
+      | 'Proposal'
+      | 'Bid Negotiation'
+      | 'Closed Won'
+      | 'Closed Lost';
     chanceToWin: number;
     chanceOfOpportunity: number;
     estimatedValue: number;
