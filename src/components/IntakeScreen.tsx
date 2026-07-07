@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Mail,
@@ -74,12 +74,12 @@ export default function IntakeScreen({
   const slaThresholdHours = slaThresholdDays * 24;
 
   // Filter for quotes that are unqualified or in clarification drafts
-  const activeInflow = quotes.filter(
+  const activeInflow = useMemo(() => quotes.filter(
     q =>
       q.status === 'unqualified' ||
       q.status === 'clarification_draft' ||
       q.status === 'awaiting_clarification'
-  );
+  ), [quotes]);
 
   const selectedQuote = quotes.find(q => q.id === selectedId) || activeInflow[0];
 
@@ -150,13 +150,12 @@ Global Spare Parts Ltd`;
     setComposerType(null);
   };
 
-  // Filter inbox list by search query
-  const filteredInflow = activeInflow.filter(
+  const filteredInflow = useMemo(() => activeInflow.filter(
     q =>
       q.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       q.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
       q.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ), [activeInflow, searchQuery]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5" id="intake-screen-layout">
@@ -186,7 +185,7 @@ Global Spare Parts Ltd`;
               placeholder="Search sender, subject, reference..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full text-xs pl-8 pr-3 py-1.5 border border-slate-200 rounded-md bg-white focus:outline-none focus:border-[#004b93] transition-all"
+              className="w-full text-xs pl-8 pr-3 py-1.5 border border-slate-200 rounded-md bg-white focus:outline-none focus:border-[#004b93] transition-colors"
             />
             <span className="absolute left-2.5 top-2 text-slate-400 text-xs">🔍</span>
           </div>
@@ -567,7 +566,7 @@ Global Spare Parts Ltd`;
                   value={partNumber}
                   onChange={e => setPartNumber(e.target.value.toUpperCase())}
                   placeholder="Enter part number..."
-                  className="w-full text-xs font-mono px-2.5 py-1.5 rounded-md border border-[#e1e6eb] focus:outline-none focus:border-[#004b93] transition-all bg-white"
+                  className="w-full text-xs font-mono px-2.5 py-1.5 rounded-md border border-[#e1e6eb] focus:outline-none focus:border-[#004b93] transition-colors bg-white"
                   id="input-part-number"
                 />
               </div>
@@ -600,7 +599,7 @@ Global Spare Parts Ltd`;
                   value={serialNumber}
                   onChange={e => setSerialNumber(e.target.value.toUpperCase())}
                   placeholder="Enter serial number..."
-                  className="w-full text-xs font-mono px-2.5 py-1.5 rounded-md border border-[#e1e6eb] focus:outline-none focus:border-[#004b93] transition-all bg-white"
+                  className="w-full text-xs font-mono px-2.5 py-1.5 rounded-md border border-[#e1e6eb] focus:outline-none focus:border-[#004b93] transition-colors bg-white"
                   id="input-serial-number"
                 />
               </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
 import {
   GitBranch,
@@ -40,10 +40,10 @@ export default function RoutingScreen({
   // 3. AI Agent Desk (status = 'accepted_ai_agent')
   // 4. Hub Queue (status = 'accepted_hub' or 'completed')
 
-  const backlogQuotes = quotes.filter(q => q.status === 'qualified');
-  const engineeringQuotes = quotes.filter(q => q.status === 'engineering_routed');
-  const aiQuotes = quotes.filter(q => q.status === 'accepted_ai_agent');
-  const hubQuotes = quotes.filter(q => q.status === 'accepted_hub' || q.status === 'completed');
+  const backlogQuotes = useMemo(() => quotes.filter(q => q.status === 'qualified'), [quotes]);
+  const engineeringQuotes = useMemo(() => quotes.filter(q => q.status === 'engineering_routed'), [quotes]);
+  const aiQuotes = useMemo(() => quotes.filter(q => q.status === 'accepted_ai_agent'), [quotes]);
+  const hubQuotes = useMemo(() => quotes.filter(q => q.status === 'accepted_hub' || q.status === 'completed'), [quotes]);
 
   return (
     <div className="flex flex-col gap-4" id="routing-screen-layout">

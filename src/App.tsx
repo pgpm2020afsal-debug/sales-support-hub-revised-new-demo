@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShieldCheck,
@@ -58,9 +58,9 @@ export default function App() {
   const [showMenu, setShowMenu] = useState(false);
 
   // Global search filtering
-  const filteredQuotes = quotes.filter(q => {
+  const filteredQuotes = useMemo(() => {
     const query = searchQuery.toLowerCase();
-    return (
+    return quotes.filter(q =>
       q.id.toLowerCase().includes(query) ||
       q.customerName.toLowerCase().includes(query) ||
       q.customerEmail.toLowerCase().includes(query) ||
@@ -71,7 +71,7 @@ export default function App() {
       (q.serialNumberCorrected || '').toLowerCase().includes(query) ||
       (q.quoteNumber || '').toLowerCase().includes(query)
     );
-  });
+  }, [quotes, searchQuery]);
 
   const handleSearchResultClick = (q: QuoteInquiry) => {
     if (
@@ -223,6 +223,11 @@ export default function App() {
 
   // HANDLER: Route to Local Engineering in Stage 2
   const handleRouteEngineering = (id: string) => {
+    const createRfxId = (quoteId: string) =>
+      quoteId.startsWith('REQ') ? quoteId.replace(/^REQ/, 'RFx') : `RFx-${quoteId}`;
+
+    const rfxId = createRfxId(id);
+
     setQuotes(prev =>
       prev.map(q => {
         if (q.id === id) {
@@ -230,16 +235,26 @@ export default function App() {
             ...q,
             status: 'engineering_routed',
             finalComplexity: 'Complex',
+            notes: `${q.notes || ''} Quote Preparation Task created in SFDC: ${rfxId}.`,
           };
         }
         return q;
       })
     );
-    triggerNotification('⚙️ Routed inquiry to Local Metallurgical Engineering queue.', 'warning');
+
+    triggerNotification(
+      `⚙️ Routed inquiry to Local Metallurgical Engineering queue. Quote Preparation Task is created with ${rfxId}`,
+      'warning'
+    );
   };
 
   // HANDLER: Accept into Hub Queue in Stage 2
   const handleAcceptHub = (id: string) => {
+    const createRfxId = (quoteId: string) =>
+      quoteId.startsWith('REQ') ? quoteId.replace(/^REQ/, 'RFx') : `RFx-${quoteId}`;
+
+    const rfxId = createRfxId(id);
+
     setQuotes(prev =>
       prev.map(q => {
         if (q.id === id) {
@@ -247,6 +262,7 @@ export default function App() {
             ...q,
             status: 'accepted_hub',
             finalComplexity: q.suggestedComplexity,
+            notes: `${q.notes || ''} Quote Preparation Task created in SFDC: ${rfxId}.`,
           };
         }
         return q;
@@ -255,7 +271,7 @@ export default function App() {
 
     setSelectedQuoteId(id);
     triggerNotification(
-      '🚀 Approved for Hub processing. Item is now active in Tab 3: Quote Desk.',
+      `🚀 Approved for Hub processing. Quote Preparation Task is created with ${rfxId}. Item is now active in Tab 3: Quote Desk.`,
       'success'
     );
 
@@ -270,6 +286,11 @@ export default function App() {
 
   // HANDLER: Route to Autonomous AI Desk in Stage 2
   const handleAcceptAiAgent = (id: string) => {
+    const createRfxId = (quoteId: string) =>
+      quoteId.startsWith('REQ') ? quoteId.replace(/^REQ/, 'RFx') : `RFx-${quoteId}`;
+
+    const rfxId = createRfxId(id);
+
     setQuotes(prev =>
       prev.map(q => {
         if (q.id === id) {
@@ -277,6 +298,7 @@ export default function App() {
             ...q,
             status: 'accepted_ai_agent',
             finalComplexity: 'Simple',
+            notes: `${q.notes || ''} Quote Preparation Task created in SFDC: ${rfxId}.`,
           };
         }
         return q;
@@ -285,7 +307,7 @@ export default function App() {
 
     setSelectedQuoteId(id);
     triggerNotification(
-      '🤖 Routed to Autonomous AI Desk. AI Agent is compiling parts and drafts...',
+      `🤖 Routed to Autonomous AI Desk. Quote Preparation Task is created with ${rfxId}. AI Agent is compiling parts and drafts...`,
       'info'
     );
 
@@ -346,18 +368,15 @@ export default function App() {
   };
 
   // Tab counters for badge display
-  const countIntake = quotes.filter(
-    q =>
-      q.status === 'unqualified' ||
-      q.status === 'clarification_draft' ||
-      q.status === 'awaiting_clarification'
-  ).length;
+  const countIntake = useMemo(() => quotes.filter(
+    q => q.status === 'unqualified' || q.status === 'clarification_draft' || q.status === 'awaiting_clarification'
+  ).length, [quotes]);
 
-  const countRouting = quotes.filter(q => q.status === 'qualified').length;
+  const countRouting = useMemo(() => quotes.filter(q => q.status === 'qualified').length, [quotes]);
 
-  const countQuote = quotes.filter(
+  const countQuote = useMemo(() => quotes.filter(
     q => q.status === 'accepted_hub' || q.status === 'accepted_ai_agent'
-  ).length;
+  ).length, [quotes]);
 
   const activeModalQuote = quotes.find(q => q.id === showSuccessModal);
 

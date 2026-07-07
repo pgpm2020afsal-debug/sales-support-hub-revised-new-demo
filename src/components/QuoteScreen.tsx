@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   FileText,
@@ -313,9 +313,9 @@ export default function QuoteScreen({
   onApproveAndSend,
   triggerNotification,
 }: QuoteScreenProps) {
-  const hubQuotes = quotes.filter(
+  const hubQuotes = useMemo(() => quotes.filter(
     q => q.status === 'accepted_hub' || q.status === 'accepted_ai_agent' || q.status === 'completed'
-  );
+  ), [quotes]);
   const selectedQuote = quotes.find(q => q.id === selectedId) || hubQuotes[0];
 
   const [triggeredIds, setTriggeredIds] = useState<Record<string, boolean>>({});
